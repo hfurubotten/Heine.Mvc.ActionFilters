@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E8AC5289-C306-45A1-B7B9-1E8282F02774}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{43E19D43-7CC4-428C-9AC5-574ADD14C438}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Heine.Mvc.ActionFilters", "src\Heine.Mvc.ActionFilters\Heine.Mvc.ActionFilters.xproj", "{819FD1D6-2763-4839-9CCA-038C76A60009}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{819FD1D6-2763-4839-9CCA-038C76A60009}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{819FD1D6-2763-4839-9CCA-038C76A60009}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{819FD1D6-2763-4839-9CCA-038C76A60009}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{819FD1D6-2763-4839-9CCA-038C76A60009}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{819FD1D6-2763-4839-9CCA-038C76A60009} = {E8AC5289-C306-45A1-B7B9-1E8282F02774}
+	EndGlobalSection
+EndGlobal
