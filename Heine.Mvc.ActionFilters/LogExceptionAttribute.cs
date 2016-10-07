@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using NLog;
 using System.Web.Http.Filters;
-using NLog;
-using System.Net.Http;
-using System.Net;
 
 namespace Heine.Mvc.ActionFilters
 {
