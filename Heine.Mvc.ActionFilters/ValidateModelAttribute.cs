@@ -19,8 +19,6 @@ namespace Heine.Mvc.ActionFilters
             if (!actionContext.ModelState.IsValid)
                 actionContext.Response = actionContext.Request.CreateErrorResponse(
                     HttpStatusCode.BadRequest, actionContext.ModelState);
-
-            //base.OnActionExecuting(actionContext);
         }
     }
 }
