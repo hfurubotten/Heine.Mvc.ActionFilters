@@ -16,7 +16,7 @@ public class ContactsController : ApiController
     }
 }
 ```
-The method `GetContact` will now validate the provided parameter and return a `400 Bad Request` if it is not a valid `Guid`.
+This will apply only to the Web API action that is decorated with the attribute.
 
 #### By controller
 ```csharp
