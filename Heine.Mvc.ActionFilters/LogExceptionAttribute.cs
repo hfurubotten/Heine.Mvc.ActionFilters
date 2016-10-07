@@ -8,7 +8,7 @@ using NLog;
 
 namespace Heine.Mvc.ActionFilters
 {
-    public sealed class MyExceptionFilterAttribute : ExceptionFilterAttribute
+    public sealed class LogExceptionAttribute : ExceptionFilterAttribute
     {
         private static ILogger logger;
 
