@@ -5,17 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http.Filters;
 using NLog;
+using System.Net.Http;
+using System.Net;
 
 namespace Heine.Mvc.ActionFilters
 {
     public sealed class LogExceptionAttribute : ExceptionFilterAttribute
     {
         private static ILogger logger;
-
-        /// <summary>
-        /// The error level the message should be reported as. Default value: Error.
-        /// </summary>
-        public LogLevel Level = LogLevel.Error;
+        private static string ErrorMessage = "An error occured. Please try again later.";
 
         /// <summary>
         /// The message format which will be logged. If the message will be logged the value will go through string format.
@@ -36,9 +34,15 @@ namespace Heine.Mvc.ActionFilters
             if (logger == null)
                 logger = LogManager.GetCurrentClassLogger();
 
-            logger.Log(Level, MessageFormat, actionContext.Request.RequestUri.AbsolutePath,
+            logger.Error(exception, MessageFormat, actionContext.Request.RequestUri.AbsolutePath,
                 actionContext.ControllerContext.ControllerDescriptor.ControllerName,
                 actionContext.ActionDescriptor.ActionName);
+
+            actionExecutedContext.Response = new HttpResponseMessage
+            {
+                Content = new StringContent(ErrorMessage),
+                StatusCode = HttpStatusCode.InternalServerError
+            };
         }
     }
 }
