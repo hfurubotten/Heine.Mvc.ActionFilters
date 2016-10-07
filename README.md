@@ -1,5 +1,12 @@
 # Web Api Action Filters
-To keep your Web API lean and focused, you should think about separating concerns and stick to the DRY principle. This NuGet package contains several reusable action filters that can be used in `ApiController`. There are several ways to register a Web API filter. 
+To keep your Web API lean and focused, you should think about separating concerns and stick to the DRY principle. This NuGet package contains several reusable action filters that can be used in `ApiController`. There are several ways to register a Web API filter.
+
+### Installation
+Run the following command from the [Package Manager Console](https://docs.nuget.org/ndocs/tools/package-manager-console)
+
+```Install-Package Heine.Mvc.ActionFilters```
+
+or search for the package inside the Nuget Package Manager in Visual Studio.
 
 ### Registering action filters
 The following code snippets shows three ways that you can register an action filter depending on your needs.
