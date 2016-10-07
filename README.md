@@ -47,3 +47,4 @@ This will apply to all Web API controller acitons in the entire project.
 ### Action filter attributes
 * `ValidateModel` will validate the `ModelState` and return a `400 Bad Request` in case it is not valid.
 * `ReportObsoleteUsage` will log a warning message every time a method that is decorated with this attribute is used.
+* `LogException` will log an error message in if an action triggers an exception.
