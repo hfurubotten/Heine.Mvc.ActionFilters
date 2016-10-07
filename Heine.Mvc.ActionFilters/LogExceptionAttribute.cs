@@ -13,7 +13,6 @@ namespace Heine.Mvc.ActionFilters
     public sealed class LogExceptionAttribute : ExceptionFilterAttribute
     {
         private static ILogger logger;
-        private static string ErrorMessage = "An error occured. Please try again later.";
 
         /// <summary>
         /// The message format which will be logged. If the message will be logged the value will go through string format.
@@ -37,12 +36,6 @@ namespace Heine.Mvc.ActionFilters
             logger.Error(exception, MessageFormat, actionContext.Request.RequestUri.AbsolutePath,
                 actionContext.ControllerContext.ControllerDescriptor.ControllerName,
                 actionContext.ActionDescriptor.ActionName);
-
-            actionExecutedContext.Response = new HttpResponseMessage
-            {
-                Content = new StringContent(ErrorMessage),
-                StatusCode = HttpStatusCode.InternalServerError
-            };
         }
     }
 }
