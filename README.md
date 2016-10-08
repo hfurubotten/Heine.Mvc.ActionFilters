@@ -1,4 +1,4 @@
-# Web Api Action Filters
+# Web API Action Filters
 To keep your Web API lean and focused, you should think about separating concerns and stick to the DRY principle. This NuGet package contains several reusable action filters that can be used in `ApiController`.
 
 ### Installation
