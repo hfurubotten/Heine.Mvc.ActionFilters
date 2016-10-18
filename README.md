@@ -1,4 +1,4 @@
-# Web Api Action Filters
+# Web API Action Filters
 To keep your Web API lean and focused, you should think about separating concerns and stick to the DRY principle. This NuGet package contains several reusable action filters that can be used in `ApiController`.
 
 ### Installation
@@ -55,6 +55,7 @@ This will apply to all Web API controller acitons in the entire project.
 * `ValidateModel` will validate the `ModelState` and return a `400 Bad Request` in case it is not valid.
 * `ReportObsoleteUsage` will log a warning message every time a method that is decorated with this attribute is used.
 * `LogException` will log an error message and return `500 Internal Server Error` in if an action triggers an exception.
+* `NotFoundException` will return `404 Not Found` if an exception of the type `NotFoundException` (included in the package) is thrown.
 
 ## Dependencies
 The package depends on [NLog](http://nlog-project.org/) to handle the logging. That means that you need to have a file named `NLog.config` inside your project (or a project you are referencing) that configures target, paramaters, minimum log level etc.
