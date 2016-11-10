@@ -3,7 +3,7 @@ using System.Net;
 
 namespace Heine.Mvc.ActionFilters
 {
-    class BadRequestException : HttpStatusException
+    public class BadRequestException : HttpStatusException
     {
         public BadRequestException()
             : base(HttpStatusCode.BadRequest)
