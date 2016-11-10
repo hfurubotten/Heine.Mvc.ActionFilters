@@ -26,9 +26,10 @@ namespace Heine.Mvc.ActionFilters
             if (logger == null)
                 logger = LogManager.GetCurrentClassLogger();
 
-            logger.Error(exception, MessageFormat, actionContext.Request.RequestUri.AbsolutePath,
-                actionContext.ControllerContext.ControllerDescriptor.ControllerName,
-                actionContext.ActionDescriptor.ActionName);
+            if (!(exception is HttpStatusException))
+                logger.Error(exception, MessageFormat, actionContext.Request.RequestUri.AbsolutePath,
+                    actionContext.ControllerContext.ControllerDescriptor.ControllerName,
+                    actionContext.ActionDescriptor.ActionName);
         }
     }
 }
