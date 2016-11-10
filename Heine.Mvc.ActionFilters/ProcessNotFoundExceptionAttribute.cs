@@ -2,10 +2,9 @@
 using System.Net.Http;
 using System.Web.Http.Filters;
 
-
 namespace Heine.Mvc.ActionFilters
 {
-    public sealed class NotFoundExceptionAttribute : ExceptionFilterAttribute
+    public sealed class ProcessNotFoundExceptionAttribute : ExceptionFilterAttribute
     {
         public override void OnException(HttpActionExecutedContext actionExecutedContext)
         {
