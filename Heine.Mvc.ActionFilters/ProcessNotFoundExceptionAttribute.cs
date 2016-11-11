@@ -15,6 +15,9 @@ namespace Heine.Mvc.ActionFilters
             {
                 actionContext.Response = actionContext.Request.CreateErrorResponse(
                         HttpStatusCode.NotFound, exception.Message);
+                
+
+                actionExecutedContext.Exception = null;
             }
         }
     }

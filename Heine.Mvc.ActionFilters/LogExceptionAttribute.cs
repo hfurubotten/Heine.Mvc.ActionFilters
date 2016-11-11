@@ -21,6 +21,7 @@ namespace Heine.Mvc.ActionFilters
         public override void OnException(HttpActionExecutedContext actionExecutedContext)
         {
             var exception = actionExecutedContext.Exception;
+            
             var actionContext = actionExecutedContext.ActionContext;
 
             if (logger == null)
