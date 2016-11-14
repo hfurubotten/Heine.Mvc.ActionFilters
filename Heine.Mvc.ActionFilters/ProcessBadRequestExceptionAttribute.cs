@@ -1,5 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Http.Filters;
 
 namespace Heine.Mvc.ActionFilters
@@ -9,13 +11,26 @@ namespace Heine.Mvc.ActionFilters
         public override void OnException(HttpActionExecutedContext actionExecutedContext)
         {
             var exception = actionExecutedContext.Exception;
-            var actionContext = actionExecutedContext.ActionContext;
 
-            if (exception is NotFoundException)
+            if (exception is BadRequestException)
             {
-                actionContext.Response = actionContext.Request.CreateErrorResponse(
-                        HttpStatusCode.NotFound, exception.Message);
+                if (string.IsNullOrWhiteSpace(exception.Message))
+                {
+                    actionExecutedContext.Response = actionExecutedContext.Request.CreateResponse(HttpStatusCode.BadRequest);
+                }
+                else
+                {
+                    actionExecutedContext.Response = actionExecutedContext.Request.CreateResponse(
+                               HttpStatusCode.BadRequest, exception.Message);
+                }
             }
+
+            base.OnException(actionExecutedContext);
+        }
+
+        public override Task OnExceptionAsync(HttpActionExecutedContext actionExecutedContext, CancellationToken cancellationToken)
+        {
+            return Task.Run(() => { OnException(actionExecutedContext); });
         }
     }
 }

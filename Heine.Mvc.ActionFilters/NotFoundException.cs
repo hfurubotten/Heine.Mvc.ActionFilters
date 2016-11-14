@@ -6,7 +6,7 @@ namespace Heine.Mvc.ActionFilters
     public class NotFoundException : HttpStatusException
     {
         public NotFoundException()
-            : base(HttpStatusCode.NotFound)
+            : base(HttpStatusCode.NotFound, string.Empty)
         {
         }
 

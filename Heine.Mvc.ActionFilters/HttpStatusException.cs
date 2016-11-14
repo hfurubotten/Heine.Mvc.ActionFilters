@@ -11,26 +11,26 @@ namespace Heine.Mvc.ActionFilters
     {
         public HttpStatusCode HttpCode { get; set; }
 
-        public HttpStatusException() : base()
+        public HttpStatusException() : base(string.Empty)
         {
-            HttpCode = HttpStatusCode.InternalServerError;
+            this.HttpCode = HttpStatusCode.InternalServerError;
         }
 
-        public HttpStatusException(HttpStatusCode httpCode) : base()
+        public HttpStatusException(HttpStatusCode httpCode) : base(string.Empty)
         {
-            HttpCode = HttpCode;
+            this.HttpCode = httpCode;
         }
 
         public HttpStatusException(HttpStatusCode httpCode, string message)
             : base(message)
         {
-            HttpCode = HttpCode;
+            this.HttpCode = httpCode;
         }
 
         public HttpStatusException(HttpStatusCode httpCode, string message, Exception inner)
             : base(message, inner)
         {
-            HttpCode = HttpCode;
+            this.HttpCode = httpCode;
         }
     }
 }

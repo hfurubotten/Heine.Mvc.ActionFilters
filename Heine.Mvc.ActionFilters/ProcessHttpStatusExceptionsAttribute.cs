@@ -1,4 +1,6 @@
 ﻿using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Http.Filters;
 
 namespace Heine.Mvc.ActionFilters
@@ -13,12 +15,24 @@ namespace Heine.Mvc.ActionFilters
             if (exception is HttpStatusException)
             {
                 var httpEx = exception as HttpStatusException;
-                actionContext.Response = actionContext.Request.CreateErrorResponse(
-                        httpEx.HttpCode, httpEx.Message);
 
-                actionExecutedContext.Exception = null;
+                if (string.IsNullOrWhiteSpace(httpEx.Message))
+                {
+                    actionExecutedContext.Response = actionExecutedContext.Request.CreateResponse(httpEx.HttpCode);
+                }
+                else
+                {
+                    actionExecutedContext.Response = actionExecutedContext.Request.CreateResponse(
+                               httpEx.HttpCode, httpEx.Message);
+                }
             }
 
+            base.OnException(actionExecutedContext);
+        }
+
+        public override Task OnExceptionAsync(HttpActionExecutedContext actionExecutedContext, CancellationToken cancellationToken)
+        {
+            return Task.Run(() => { OnException(actionExecutedContext); });
         }
     }
 }
