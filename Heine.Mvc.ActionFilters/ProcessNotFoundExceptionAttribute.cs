@@ -14,15 +14,11 @@ namespace Heine.Mvc.ActionFilters
 
             if (exception is NotFoundException)
             {
+                actionExecutedContext.ActionContext.Response = actionExecutedContext.Request.CreateResponse(HttpStatusCode.NotFound);
                 actionExecutedContext.Response = actionExecutedContext.Request.CreateResponse(HttpStatusCode.NotFound);
             }
 
             base.OnException(actionExecutedContext);
-        }
-
-        public override Task OnExceptionAsync(HttpActionExecutedContext actionExecutedContext, CancellationToken cancellationToken)
-        {
-            return Task.Run(() => { OnException(actionExecutedContext); });
         }
     }
 }

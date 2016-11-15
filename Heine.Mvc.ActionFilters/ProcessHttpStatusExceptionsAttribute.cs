@@ -19,20 +19,19 @@ namespace Heine.Mvc.ActionFilters
                 if (string.IsNullOrWhiteSpace(httpEx.Message))
                 {
                     actionExecutedContext.Response = actionExecutedContext.Request.CreateResponse(httpEx.HttpCode);
+                    actionExecutedContext.ActionContext.Response = actionExecutedContext.Request.CreateResponse(httpEx.HttpCode);
                 }
                 else
                 {
-                    actionExecutedContext.Response = actionExecutedContext.Request.CreateResponse(
+                    actionExecutedContext.Response = actionExecutedContext.Request.CreateErrorResponse(
                                httpEx.HttpCode, httpEx.Message);
+
+                    actionExecutedContext.ActionContext.Response = actionExecutedContext.Request.CreateErrorResponse(
+                        httpEx.HttpCode, httpEx.Message);
                 }
             }
 
             base.OnException(actionExecutedContext);
-        }
-
-        public override Task OnExceptionAsync(HttpActionExecutedContext actionExecutedContext, CancellationToken cancellationToken)
-        {
-            return Task.Run(() => { OnException(actionExecutedContext); });
         }
     }
 }

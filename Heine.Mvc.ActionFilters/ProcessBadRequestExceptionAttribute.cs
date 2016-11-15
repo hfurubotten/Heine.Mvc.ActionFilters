@@ -16,21 +16,20 @@ namespace Heine.Mvc.ActionFilters
             {
                 if (string.IsNullOrWhiteSpace(exception.Message))
                 {
+                    actionExecutedContext.ActionContext.Response = actionExecutedContext.Request.CreateResponse(HttpStatusCode.BadRequest);
                     actionExecutedContext.Response = actionExecutedContext.Request.CreateResponse(HttpStatusCode.BadRequest);
+
                 }
                 else
                 {
-                    actionExecutedContext.Response = actionExecutedContext.Request.CreateResponse(
+                    actionExecutedContext.Response = actionExecutedContext.Request.CreateErrorResponse(
                                HttpStatusCode.BadRequest, exception.Message);
+                    actionExecutedContext.ActionContext.Response = actionExecutedContext.Request.CreateErrorResponse(
+                        HttpStatusCode.BadRequest, exception.Message);
                 }
             }
 
             base.OnException(actionExecutedContext);
-        }
-
-        public override Task OnExceptionAsync(HttpActionExecutedContext actionExecutedContext, CancellationToken cancellationToken)
-        {
-            return Task.Run(() => { OnException(actionExecutedContext); });
         }
     }
 }
