@@ -15,6 +15,11 @@ namespace Heine.Mvc.ActionFilters.Tests
     [TestClass]
     public class UnitTestActionFilters
     {
+        public class ErrorMessage
+        {
+            public string Message { get; set; }
+        }
+
         [TestMethod]
         public void OnActionExecuted_InvalidModelState_ResultIsBadRequest()
         {
@@ -32,6 +37,17 @@ namespace Heine.Mvc.ActionFilters.Tests
             var attribute = new ProcessBadRequestExceptionAttribute();
             attribute.OnException(actionExecutedContext);
             Assert.AreEqual(HttpStatusCode.BadRequest, actionExecutedContext.ActionContext.Response.StatusCode);
+        }
+
+        [TestMethod]
+        public void OnExeption_BadRequestException_ResultIsBadRequestWithMessage()
+        {
+            var actionExecutedContext = GetActionExecutedContext(new BadRequestException("TestMessage"));
+            var attribute = new ProcessBadRequestExceptionAttribute();
+            attribute.OnException(actionExecutedContext);
+            Assert.AreEqual(HttpStatusCode.BadRequest, actionExecutedContext.ActionContext.Response.StatusCode);
+            var content = actionExecutedContext.ActionContext.Response.Content.ReadAsAsync<ErrorMessage>().Result;
+            Assert.AreEqual("TestMessage", content.Message);
         }
 
         [TestMethod]
