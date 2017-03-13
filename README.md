@@ -83,3 +83,4 @@ new WebApiExceptionLogger
 The default is 10 000.
 ## Dependencies
 The package depends on [NLog](http://nlog-project.org/) to handle the logging. That means that you need to have a file named `NLog.config` inside your project (or a project you are referencing) that configures target, paramaters, minimum log level etc.
+It also depends on [Newtonsoft.Json](http://www.newtonsoft.com/json) to prettify the request body.
