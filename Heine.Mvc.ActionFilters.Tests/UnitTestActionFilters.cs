@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+﻿using Moq;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
@@ -7,12 +6,14 @@ using System;
 using System.Collections.ObjectModel;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
+using NUnit.Framework;
 
 namespace Heine.Mvc.ActionFilters.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class UnitTestActionFilters
     {
         public class ErrorMessage
@@ -20,7 +21,7 @@ namespace Heine.Mvc.ActionFilters.Tests
             public string Message { get; set; }
         }
 
-        [TestMethod]
+        [Test]
         public void OnActionExecuted_InvalidModelState_ResultIsBadRequest()
         {
             var actionContext = GetActionContext();
@@ -30,36 +31,32 @@ namespace Heine.Mvc.ActionFilters.Tests
             Assert.AreEqual(HttpStatusCode.BadRequest, actionContext.Response.StatusCode);
         }
 
-        [TestMethod]
-        public void OnExeption_BadRequestException_ResultIsBadRequest()
+        [TestCase(typeof(ConflictException), HttpStatusCode.Conflict)]
+        [TestCase(typeof(NotFoundException), HttpStatusCode.NotFound)]
+        [TestCase(typeof(BadRequestException), HttpStatusCode.BadRequest)]
+        public void OnException_WhenExceptionIsHttpStatusException_ResultShouldHaveCorrectStatusCode(Type exceptionType, HttpStatusCode expectedStatusCode)
         {
-            var actionExecutedContext = GetActionExecutedContext(new BadRequestException());
-            var attribute = new ProcessBadRequestExceptionAttribute();
+            var exception = Activator.CreateInstance(exceptionType);
+            var actionExecutedContext = GetActionExecutedContext((HttpStatusException)exception);
+            var attribute = new ProcessHttpStatusExceptionsAttribute();
             attribute.OnException(actionExecutedContext);
-            Assert.AreEqual(HttpStatusCode.BadRequest, actionExecutedContext.ActionContext.Response.StatusCode);
+            Assert.AreEqual(expectedStatusCode, actionExecutedContext.ActionContext.Response.StatusCode);
         }
 
-        [TestMethod]
-        public void OnExeption_BadRequestException_ResultIsBadRequestWithMessage()
+        [TestCase(typeof(ConflictException), "Error message")]
+        [TestCase(typeof(NotFoundException), "Error message")]
+        [TestCase(typeof(BadRequestException), "Error message")]
+        public async Task OnException_WhenExceptionIsHttpStatusException_ResultShouldHaveCorrectMessage(Type exceptionType, string expectedMessage)
         {
-            var actionExecutedContext = GetActionExecutedContext(new BadRequestException("TestMessage"));
-            var attribute = new ProcessBadRequestExceptionAttribute();
+            var exception = Activator.CreateInstance(exceptionType, expectedMessage);
+            var actionExecutedContext = GetActionExecutedContext((HttpStatusException)exception);
+            var attribute = new ProcessHttpStatusExceptionsAttribute();
             attribute.OnException(actionExecutedContext);
-            Assert.AreEqual(HttpStatusCode.BadRequest, actionExecutedContext.ActionContext.Response.StatusCode);
-            var content = actionExecutedContext.ActionContext.Response.Content.ReadAsAsync<ErrorMessage>().Result;
-            Assert.AreEqual("TestMessage", content.Message);
+            var content = await actionExecutedContext.ActionContext.Response.Content.ReadAsAsync<ErrorMessage>();
+            Assert.AreEqual(expectedMessage, content.Message);
         }
 
-        [TestMethod]
-        public void OnExeption_NotFoundException_ResultIsNotFound()
-        {
-            var actionExecutedContext = GetActionExecutedContext(new NotFoundException());
-            var attribute = new ProcessNotFoundExceptionAttribute();
-            attribute.OnException(actionExecutedContext);
-            Assert.AreEqual(HttpStatusCode.NotFound, actionExecutedContext.ActionContext.Response.StatusCode);
-        }
-
-        [TestMethod]
+        [Test]
         public void OnActionExecuted_ObsoleteMethod_WarningIsLogged()
         {
             var configuration = new LoggingConfiguration();

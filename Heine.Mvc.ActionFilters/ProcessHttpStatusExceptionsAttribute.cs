@@ -1,6 +1,4 @@
 ﻿using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Web.Http.Filters;
 
 namespace Heine.Mvc.ActionFilters
@@ -10,7 +8,6 @@ namespace Heine.Mvc.ActionFilters
         public override void OnException(HttpActionExecutedContext actionExecutedContext)
         {
             var exception = actionExecutedContext.Exception;
-            var actionContext = actionExecutedContext.ActionContext;
 
             if (exception is HttpStatusException)
             {
@@ -24,7 +21,7 @@ namespace Heine.Mvc.ActionFilters
                 else
                 {
                     actionExecutedContext.Response = actionExecutedContext.Request.CreateErrorResponse(
-                               httpEx.HttpCode, httpEx.Message);
+                        httpEx.HttpCode, httpEx.Message);
 
                     actionExecutedContext.ActionContext.Response = actionExecutedContext.Request.CreateErrorResponse(
                         httpEx.HttpCode, httpEx.Message);

@@ -11,12 +11,12 @@ namespace Heine.Mvc.ActionFilters
         }
 
         public NotFoundException(string message)
-            : base(HttpStatusCode.NotFound, string.Empty)
+            : base(HttpStatusCode.NotFound, message)
         {
         }
 
         public NotFoundException(string message, Exception inner)
-            : base(HttpStatusCode.NotFound, string.Empty, inner)
+            : base(HttpStatusCode.NotFound, message, inner)
         {
         }
     }
