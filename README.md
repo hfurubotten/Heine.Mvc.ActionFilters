@@ -54,8 +54,33 @@ This will apply to all Web API controller acitons in the entire project.
 ### Action filter attributes
 * `ValidateModel` will validate the `ModelState` and return a `400 Bad Request` in case it is not valid.
 * `ReportObsoleteUsage` will log a warning message every time a method that is decorated with this attribute is used.
-* `LogException` will log an error message and return `500 Internal Server Error` in if an action triggers an exception.
-* `NotFoundException` will return `404 Not Found` if an exception of the type `NotFoundException` (included in the package) is thrown.
+* `ProcessHttpStatusException` will catch any exception of the type `HttpStatusException` (included in the package) and turn it in to the appropriate reponse message in the controller. E.g., if a `BadRequestException` is thrown in the code excecuted by the controller, it will be handled by the filter and converted into an `HttpResponseMessage` with status code 400 and message equal to the exception message. Similarily, `NotFoundException` will result in a 404 response.
+* `LogException` will log an error message and return `500 Internal Server Error` in if an unhandled exception reaches the controller.
 
+### Services
+If you want more detailed exception logs, you can register the `WebApiExceptionLogger` service:
+```csharp
+using Heine.Mvc.ActionFilters;
+
+public static class WebApiConfig
+{
+    public static void Register(HttpConfiguration config)
+    {
+      config.Services.Add(typeof(IExceptionLogger), new WebApiExceptionLogger());
+    
+      // Other configuration code ...
+    }
+}
+```
+The difference between the `LogException` filter and the `WebApiExceptionLogger` service is that the service will also log a prettyfied version of the incoming request body, which can be useful for debugging purposes. To prevent bloating the logs, you should consider limiting the amount of characters that the service is allowed to log from the request body. To do that, simply set the `RequestBodyMaxLogLength` property:
+
+```csharp
+new WebApiExceptionLogger
+{
+  RequestBodyMaxLogLength = 1000
+}
+```
+The default is 10 000.
 ## Dependencies
 The package depends on [NLog](http://nlog-project.org/) to handle the logging. That means that you need to have a file named `NLog.config` inside your project (or a project you are referencing) that configures target, paramaters, minimum log level etc.
+It also depends on [Newtonsoft.Json](http://www.newtonsoft.com/json) to prettify the request body.
