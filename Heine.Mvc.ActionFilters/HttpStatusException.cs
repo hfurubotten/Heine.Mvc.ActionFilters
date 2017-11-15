@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Heine.Mvc.ActionFilters
 {
@@ -13,24 +9,24 @@ namespace Heine.Mvc.ActionFilters
 
         public HttpStatusException() : base(string.Empty)
         {
-            this.HttpCode = HttpStatusCode.InternalServerError;
+            HttpCode = HttpStatusCode.InternalServerError;
         }
 
         public HttpStatusException(HttpStatusCode httpCode) : base(string.Empty)
         {
-            this.HttpCode = httpCode;
+            HttpCode = httpCode;
         }
 
         public HttpStatusException(HttpStatusCode httpCode, string message)
             : base(message)
         {
-            this.HttpCode = httpCode;
+            HttpCode = httpCode;
         }
 
         public HttpStatusException(HttpStatusCode httpCode, string message, Exception inner)
             : base(message, inner)
         {
-            this.HttpCode = httpCode;
+            HttpCode = httpCode;
         }
     }
 }

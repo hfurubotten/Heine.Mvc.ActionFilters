@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using Newtonsoft.Json;
 
@@ -21,14 +17,20 @@ namespace Heine.Mvc.ActionFilters
             {
                 return XDocument.Parse(input).ToString();
             }
-            catch (Exception) { }
+            catch(Exception)
+            {
+                // ignored
+            }
 
             try
             {
                 var t = JsonConvert.DeserializeObject<object>(input);
                 return JsonConvert.SerializeObject(t, Formatting.Indented);
             }
-            catch (Exception) { }
+            catch (Exception)
+            {
+                // ignored
+            }
 
             return input;
         }
