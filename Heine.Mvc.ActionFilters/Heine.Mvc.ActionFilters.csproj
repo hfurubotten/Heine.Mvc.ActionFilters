@@ -66,6 +66,7 @@
     <Compile Include="HttpStatusException.cs" />
     <Compile Include="IAuditable.cs" />
     <Compile Include="LogAllTrafficAttribute.cs" />
+    <Compile Include="LogClientErrorsAttribute.cs" />
     <Compile Include="LogExceptionAttribute.cs" />
     <Compile Include="NotFoundException.cs" />
     <Compile Include="ProcessBadRequestExceptionAttribute.cs" />
