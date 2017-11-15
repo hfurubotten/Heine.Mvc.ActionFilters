@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Text;
 using NLog;
 using System.Web.Http.ExceptionHandling;
+using Heine.Mvc.ActionFilters.Extensions;
 
 namespace Heine.Mvc.ActionFilters
 {

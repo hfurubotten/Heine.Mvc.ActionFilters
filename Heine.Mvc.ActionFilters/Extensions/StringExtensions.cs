@@ -2,7 +2,7 @@
 using System.Xml.Linq;
 using Newtonsoft.Json;
 
-namespace Heine.Mvc.ActionFilters
+namespace Heine.Mvc.ActionFilters.Extensions
 {
     public static class StringExtensions
     {
