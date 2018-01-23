@@ -19,16 +19,16 @@ namespace Heine.Mvc.ActionFilters.Extensions
             return requestBody;
         }
 
-        public static string AsFormattedString(this HttpContent content)
+        public static string AsFormattedString(this HttpContent httpContent)
         {
             string ReadContent()
             {
-                var stringContent = content.GetBody();
+                var body = httpContent.GetBody();
 
-                switch (content.Headers?.ContentType?.MediaType)
+                switch (httpContent.Headers?.ContentType?.MediaType)
                 {
                     case "application/json":
-                        stringContent = JToken.Parse(stringContent).ToString(Formatting.Indented).Replace(@"\r\n", "\n");
+                        body = JToken.Parse(body).ToString(Formatting.Indented).Replace(@"\r\n", "\n");
                         break;
                     case "application/xml":
                         //TODO: Prettify XML etc.
@@ -36,18 +36,21 @@ namespace Heine.Mvc.ActionFilters.Extensions
                         break;
                 }
 
-                return stringContent;
+                return body;
             }
 
-            if (content == null) return string.Empty;
+            if (httpContent == null) return string.Empty;
 
             var stringBuilder = new StringBuilder();
 
-            stringBuilder.AppendLine();
-            stringBuilder.AppendLine("Body:");
-            stringBuilder.AppendLine("{");
-            stringBuilder.AppendLine(ReadContent());
-            stringBuilder.AppendLine("}");
+            var content = ReadContent();
+
+            if(!string.IsNullOrWhiteSpace(content))
+            {
+                stringBuilder.AppendLine();
+                stringBuilder.AppendLine("Body:");
+                stringBuilder.AppendLine(content);
+            }
 
             return stringBuilder.ToString();
         }

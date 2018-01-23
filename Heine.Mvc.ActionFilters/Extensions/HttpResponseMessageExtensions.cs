@@ -7,16 +7,15 @@ namespace Heine.Mvc.ActionFilters.Extensions
     {
         public static string AsFormattedString(this HttpResponseMessage response)
         {
-            if (response == null) return string.Empty;
+            if (response == null) return "Response: <empty>";
 
             var stringBuilder = new StringBuilder();
 
             stringBuilder.AppendLine(response.ToString());
 
-            if (response.Content != null)
-            {
-                stringBuilder.AppendLine(response.Content.AsFormattedString());
-            }
+            var stringContent = response.Content?.AsFormattedString();
+            if (!string.IsNullOrWhiteSpace(stringContent))
+                stringBuilder.AppendLine(stringContent);
 
             return stringBuilder.ToString();
         }
