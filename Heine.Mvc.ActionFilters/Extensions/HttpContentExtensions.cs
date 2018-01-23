@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 using Newtonsoft.Json;
@@ -29,7 +30,8 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 switch (httpContent.Headers?.ContentType?.MediaType)
                 {
                     case "application/json":
-                        body = JToken.Parse(body).ToString(Formatting.Indented).Replace(@"\r\n", "\n");
+                        try { body = JToken.Parse(body).ToString(Formatting.Indented).Replace(@"\r\n", "\n"); }
+                        catch { }
                         break;
                     case "application/xml":
                         //TODO: Prettify XML etc.
