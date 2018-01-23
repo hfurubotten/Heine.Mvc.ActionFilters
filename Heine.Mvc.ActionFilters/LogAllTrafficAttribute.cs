@@ -18,7 +18,7 @@ namespace Heine.Mvc.ActionFilters
         /// <inheritdoc />
         public override void OnActionExecuting(HttpActionContext actionContext)
         {
-            LogManager.GetCurrentClassLogger().Debug(actionContext.Request.AsFormattedString());
+            LogManager.GetCurrentClassLogger().Debug("Request: {0}", actionContext.Request.AsFormattedString());
 
             base.OnActionExecuting(actionContext);
         }
@@ -27,7 +27,16 @@ namespace Heine.Mvc.ActionFilters
         public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
         {
             if (actionExecutedContext.Response != null)
-                LogManager.GetCurrentClassLogger().Debug(actionExecutedContext.Response.AsFormattedString());
+            {
+                if (actionExecutedContext.Response.IsSuccessStatusCode)
+                    LogManager.GetCurrentClassLogger().Debug("Response: {0}", actionExecutedContext.Response.AsFormattedString());
+
+                else if ((int)actionExecutedContext.Response.StatusCode < 500)
+                    LogManager.GetCurrentClassLogger().Warn("Response: {0}", actionExecutedContext.Response.AsFormattedString());
+
+                else
+                    LogManager.GetCurrentClassLogger().Error("Response: {0}", actionExecutedContext.Response.AsFormattedString());
+            }
 
             base.OnActionExecuted(actionExecutedContext);
         }

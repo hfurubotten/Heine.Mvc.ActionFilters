@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Net.Http;
 using System.Text;
 using Newtonsoft.Json;
@@ -31,6 +30,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 {
                     case "application/json":
                         try { body = JToken.Parse(body).ToString(Formatting.Indented).Replace(@"\r\n", "\n"); }
+                        // ReSharper disable once EmptyGeneralCatchClause
                         catch { }
                         break;
                     case "application/xml":
