@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Web.Http.Controllers;
+﻿using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Heine.Mvc.ActionFilters.Extensions;
 using NLog;
