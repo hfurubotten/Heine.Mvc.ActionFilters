@@ -2,9 +2,9 @@
 <package >
   <metadata>
     <id>Heine.Mvc.ActionFilters</id>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
     <title>Heine.Mvc.ActionFilters</title>
-    <authors>Heine Furubotten, Stian Sandve</authors>
+    <authors>Heine Furubotten, Stian Sandve, Sander Struijk</authors>
     <owners>Heine Furubotten</owners>
     <licenseUrl>https://opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/hfurubotten/Heine.Mvc.ActionFilters</projectUrl>

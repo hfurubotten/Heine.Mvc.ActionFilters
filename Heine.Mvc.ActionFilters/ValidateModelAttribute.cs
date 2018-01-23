@@ -16,18 +16,17 @@ namespace Heine.Mvc.ActionFilters
 
         public override void OnActionExecuting(HttpActionContext actionContext)
         {
-            if (!actionContext.ModelState.IsValid)
-            {
-                actionContext.Response = actionContext.Request.CreateErrorResponse(
-                    HttpStatusCode.BadRequest, actionContext.ModelState);
+            if (actionContext.ModelState.IsValid) return;
 
-                if(LogModelErrors)
-                    LogManager.GetCurrentClassLogger().Warn("Modelstate on client request is invalid. \n" +
-                        "Request: {0} \n" +
-                        "Response: {1}", 
-                        actionContext.Request?.Content.GetBody(),
-                        JsonConvert.SerializeObject(actionContext.ModelState, Formatting.Indented));
-            }
+            actionContext.Response = actionContext.Request.CreateErrorResponse(
+                HttpStatusCode.BadRequest, actionContext.ModelState);
+
+            if(LogModelErrors)
+                LogManager.GetCurrentClassLogger().Warn("Modelstate on client request is invalid. \n" +
+                    "Request: {0} \n" +
+                    "Response: {1}", 
+                    actionContext.Request?.Content.GetBody(),
+                    JsonConvert.SerializeObject(actionContext.ModelState, Formatting.Indented));
         }
     }
 }

@@ -16,6 +16,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
             requestStream.Position = 0;
             var streamReader = new StreamReader(requestStream, Encoding.UTF8);
             var requestBody = streamReader.ReadToEnd();
+            requestStream.Position = 0;
             return requestBody;
         }
 
