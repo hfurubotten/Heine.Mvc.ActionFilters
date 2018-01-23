@@ -5,17 +5,17 @@ namespace Heine.Mvc.ActionFilters.Extensions
 {
     public static class HttpRequestMessageExtensions
     {
-        public static string AsFormattedString(this HttpRequestMessage response)
+        public static string AsFormattedString(this HttpRequestMessage request)
         {
-            if (response == null) return string.Empty;
+            if (request == null) return string.Empty;
 
             var stringBuilder = new StringBuilder();
 
-            stringBuilder.AppendLine(response.ToString());
+            stringBuilder.AppendLine(request.ToString());
 
-            if (response.Content != null)
+            if (request.Content != null)
             {
-                stringBuilder.AppendLine(response.Content.AsFormattedString());
+                stringBuilder.AppendLine(request.Content.AsFormattedString());
             }
 
             return stringBuilder.ToString();
