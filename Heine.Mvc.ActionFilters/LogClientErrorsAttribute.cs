@@ -15,11 +15,12 @@ namespace Heine.Mvc.ActionFilters
 
             if (statusCode == HttpStatusCode.BadRequest)
             {
-                LogManager.GetCurrentClassLogger().Warn("Encountered a bad request from a client. \n" +
-                    "Request body: {0} \n" +
-                    "Response body: {1}", 
-                    actionExecutedContext.Request?.Content.GetBody(),
-                    actionExecutedContext.Response?.Content.GetBody());
+                LogManager.GetCurrentClassLogger().Warn(
+                    "Encountered a bad request from a client.\n" +
+                    "Request: {0}\n" +
+                    "Response: {1}\n", 
+                    actionExecutedContext.Request.AsFormattedString(),
+                    actionExecutedContext.Response.AsFormattedString());
             }
         }
     }
