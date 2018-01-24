@@ -30,9 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.4.12\lib\net45\NLog.dll</HintPath>
@@ -61,27 +60,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AuditRequestAttribute.cs" />
-    <Compile Include="BadRequestException.cs" />
-    <Compile Include="ConflictException.cs" />
+    <Compile Include="Attributes\AuditRequestAttribute.cs" />
+    <Compile Include="Exceptions\BadRequestException.cs" />
+    <Compile Include="Exceptions\ConflictException.cs" />
+    <Compile Include="Attributes\RequestResponseCorrelationAttribute.cs" />
+    <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="Extensions\HttpContentExtensions.cs" />
     <Compile Include="Extensions\HttpRequestMessageExtensions.cs" />
     <Compile Include="Extensions\HttpResponseMessageExtensions.cs" />
-    <Compile Include="HttpStatusException.cs" />
-    <Compile Include="IAuditable.cs" />
-    <Compile Include="LogAllTrafficAttribute.cs" />
-    <Compile Include="LogClientErrorsAttribute.cs" />
-    <Compile Include="LogExceptionAttribute.cs" />
-    <Compile Include="NotEmptyAttribute.cs" />
-    <Compile Include="NotFoundException.cs" />
-    <Compile Include="ProcessBadRequestExceptionAttribute.cs" />
-    <Compile Include="ProcessNotFoundExceptionAttribute.cs" />
-    <Compile Include="ProcessHttpStatusExceptionsAttribute.cs" />
-    <Compile Include="ReportObsoleteUsageAttribute.cs" />
+    <Compile Include="Exceptions\HttpStatusException.cs" />
+    <Compile Include="Extensions\LoggerExtensions.cs" />
+    <Compile Include="Interfaces\IAuditable.cs" />
+    <Compile Include="Attributes\LogAllTrafficAttribute.cs" />
+    <Compile Include="Attributes\LogClientErrorsAttribute.cs" />
+    <Compile Include="Attributes\LogExceptionAttribute.cs" />
+    <Compile Include="Attributes\GuidNotEmptyAttribute.cs" />
+    <Compile Include="Exceptions\NotFoundException.cs" />
+    <Compile Include="Attributes\ProcessHttpStatusExceptionsAttribute.cs" />
+    <Compile Include="Attributes\ReportObsoleteUsageAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="ValidateModelAttribute.cs" />
-    <Compile Include="WebApiExceptionLogger.cs" />
+    <Compile Include="Attributes\ValidateModelAttribute.cs" />
+    <Compile Include="Services\WebApiExceptionLogger.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

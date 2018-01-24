@@ -2,8 +2,9 @@
 using System.Web;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
+using Heine.Mvc.ActionFilters.Interfaces;
 
-namespace Heine.Mvc.ActionFilters
+namespace Heine.Mvc.ActionFilters.Attributes
 {
     public sealed class AuditRequestAttribute : ActionFilterAttribute
     {

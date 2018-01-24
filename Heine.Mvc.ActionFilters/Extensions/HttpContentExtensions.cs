@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Net.Http;
 using System.Text;
+using System.Xml.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -30,12 +31,11 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 {
                     case "application/json":
                         try { body = JToken.Parse(body).ToString(Formatting.Indented).Replace(@"\r\n", "\n"); }
-                        // ReSharper disable once EmptyGeneralCatchClause
-                        catch { }
+                        catch { return body; }
                         break;
                     case "application/xml":
-                        //TODO: Prettify XML etc.
-                        //content = XmlConvert.Prettify(content);
+                        try { body = XDocument.Parse(body).ToString(); }
+                        catch { return body; }
                         break;
                 }
 
@@ -48,7 +48,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
 
             var content = ReadContent();
 
-            if(!string.IsNullOrWhiteSpace(content))
+            if (!string.IsNullOrWhiteSpace(content))
             {
                 stringBuilder.AppendLine();
                 stringBuilder.AppendLine("Body:");

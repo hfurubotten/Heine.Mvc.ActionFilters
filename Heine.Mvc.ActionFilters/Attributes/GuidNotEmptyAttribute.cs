@@ -1,10 +1,10 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Heine.Mvc.ActionFilters
+namespace Heine.Mvc.ActionFilters.Attributes
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true)]
-    public sealed class NotEmptyAttribute : ValidationAttribute
+    public sealed class GuidNotEmptyAttribute : ValidationAttribute
     {
         public override bool IsValid(object value)
         {

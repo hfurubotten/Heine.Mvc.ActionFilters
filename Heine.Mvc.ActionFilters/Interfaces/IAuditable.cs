@@ -1,4 +1,4 @@
-namespace Heine.Mvc.ActionFilters
+namespace Heine.Mvc.ActionFilters.Interfaces
 {
     public interface IAuditable
     {

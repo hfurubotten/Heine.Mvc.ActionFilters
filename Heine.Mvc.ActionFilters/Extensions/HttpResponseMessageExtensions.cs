@@ -7,7 +7,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
     {
         public static string AsFormattedString(this HttpResponseMessage response)
         {
-            if (response == null) return "Response: <empty>";
+            if (response == null) return "<empty>";
 
             var stringBuilder = new StringBuilder();
 
