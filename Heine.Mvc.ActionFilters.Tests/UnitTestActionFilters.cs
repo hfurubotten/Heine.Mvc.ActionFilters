@@ -3,7 +3,9 @@ using NLog;
 using NLog.Config;
 using NLog.Targets;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -24,6 +26,14 @@ namespace Heine.Mvc.ActionFilters.Tests
             public string Message { get; set; }
         }
 
+        public class GuidModel
+        {
+            [NotEmpty]
+            public Guid? Foo { get; set; }
+            [NotEmpty]
+            public Guid Bar { get; set; }
+        }
+
         [Test]
         public void OnActionExecuted_InvalidModelState_ResultIsBadRequest()
         {
@@ -32,6 +42,22 @@ namespace Heine.Mvc.ActionFilters.Tests
             var attribute = new ValidateModelAttribute();
             attribute.OnActionExecuting(actionContext);
             Assert.AreEqual(HttpStatusCode.BadRequest, actionContext.Response.StatusCode);
+        }
+
+        [Test]
+        public void NotEmptyAttribute_WhenGuidPropertyIsEmpty_ValidationShouldFail()
+        {
+            var guidModel = new GuidModel
+            {
+                Foo = null,
+                Bar = Guid.Empty
+            };
+
+            var context = new ValidationContext(guidModel);
+            var results = new List<ValidationResult>();
+            var isValid = Validator.TryValidateObject(guidModel, context, results, true);
+            Assert.IsFalse(isValid);
+            Assert.AreEqual(results.Count, 1);
         }
 
         [Test]
