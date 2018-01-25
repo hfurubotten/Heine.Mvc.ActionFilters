@@ -16,11 +16,14 @@ namespace Heine.Mvc.ActionFilters.Attributes
         private readonly OnActionExecutedDelegate[] onActionExecutedDelegates;
         public bool ShouldLog = true;
 
-        public ProcessHttpStatusExceptionsAttribute() { }
+        public ProcessHttpStatusExceptionsAttribute()
+        {
+            onActionExecutedDelegates = new OnActionExecutedDelegate[0];
+        }
 
         public ProcessHttpStatusExceptionsAttribute(params OnActionExecutedDelegate[] onActionExecutedDelegates)
         {
-            this.onActionExecutedDelegates = onActionExecutedDelegates;
+            this.onActionExecutedDelegates = onActionExecutedDelegates ?? new OnActionExecutedDelegate[0];
         }
 
         private ILogger Logger { get; } = LogManager.GetCurrentClassLogger();
