@@ -2,6 +2,7 @@
 using System.Web.Http.Filters;
 using Heine.Mvc.ActionFilters.Exceptions;
 using Heine.Mvc.ActionFilters.Extensions;
+using Heine.Mvc.ActionFilters.Interfaces;
 using NLog;
 
 namespace Heine.Mvc.ActionFilters.Attributes
@@ -11,7 +12,7 @@ namespace Heine.Mvc.ActionFilters.Attributes
     /// </remarks>
     public delegate void OnActionExecutedDelegate(HttpActionExecutedContext actionExecutedContext);
 
-    public sealed class ProcessHttpStatusExceptionsAttribute : ExceptionFilterAttribute
+    public sealed class ProcessHttpStatusExceptionsAttribute : ExceptionFilterAttribute, IOrderableFilter
     {
         private readonly OnActionExecutedDelegate[] onActionExecutedDelegates;
         public bool ShouldLog = true;
@@ -27,6 +28,8 @@ namespace Heine.Mvc.ActionFilters.Attributes
         }
 
         private ILogger Logger { get; } = LogManager.GetCurrentClassLogger();
+
+        public int Order { get; set; }
 
         public override void OnException(HttpActionExecutedContext actionExecutedContext)
         {

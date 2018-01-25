@@ -2,6 +2,7 @@
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Heine.Mvc.ActionFilters.Extensions;
+using Heine.Mvc.ActionFilters.Interfaces;
 using NLog;
 
 namespace Heine.Mvc.ActionFilters.Attributes
@@ -14,9 +15,11 @@ namespace Heine.Mvc.ActionFilters.Attributes
     ///     Note: Responses set through exceptions will not be logged through this filter.
     ///     Note 2: Requests stopped before hitting this filter will not be logged.
     /// </remarks>
-    public sealed class LogAllTrafficAttribute : ActionFilterAttribute
+    public sealed class LogAllTrafficAttribute : ActionFilterAttribute, IOrderableFilter
     {
         private ILogger Logger { get; } = LogManager.GetCurrentClassLogger();
+
+        public int Order { get; set; }
 
         /// <inheritdoc />
         public override void OnActionExecuting(HttpActionContext actionContext)

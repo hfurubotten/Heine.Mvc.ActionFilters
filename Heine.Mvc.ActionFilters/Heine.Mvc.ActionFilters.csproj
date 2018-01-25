@@ -78,8 +78,10 @@
     <Compile Include="Exceptions\NotFoundException.cs" />
     <Compile Include="Attributes\ProcessHttpStatusExceptionsAttribute.cs" />
     <Compile Include="Attributes\ReportObsoleteUsageAttribute.cs" />
+    <Compile Include="Interfaces\IOrderableFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Attributes\ValidateModelAttribute.cs" />
+    <Compile Include="Providers\OrderedFilterProvider.cs" />
     <Compile Include="Services\WebApiExceptionLogger.cs" />
   </ItemGroup>
   <ItemGroup>

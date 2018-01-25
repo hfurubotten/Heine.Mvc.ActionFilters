@@ -1,13 +1,16 @@
 ﻿using System.Web.Http.Filters;
 using Heine.Mvc.ActionFilters.Exceptions;
 using Heine.Mvc.ActionFilters.Extensions;
+using Heine.Mvc.ActionFilters.Interfaces;
 using NLog;
 
 namespace Heine.Mvc.ActionFilters.Attributes
 {
-    public sealed class LogExceptionAttribute : ExceptionFilterAttribute
+    public sealed class LogExceptionAttribute : ExceptionFilterAttribute, IOrderableFilter
     {
         private ILogger Logger { get; } = LogManager.GetCurrentClassLogger();
+
+        public int Order { get; set; }
 
         public override void OnException(HttpActionExecutedContext actionExecutedContext)
         {

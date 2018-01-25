@@ -1,13 +1,16 @@
 ﻿using System.Net;
 using System.Web.Http.Filters;
 using Heine.Mvc.ActionFilters.Extensions;
+using Heine.Mvc.ActionFilters.Interfaces;
 using NLog;
 
 namespace Heine.Mvc.ActionFilters.Attributes
 {
-    public sealed class LogClientErrorsAttribute : ActionFilterAttribute
+    public sealed class LogClientErrorsAttribute : ActionFilterAttribute, IOrderableFilter
     {
         private ILogger Logger { get; } = LogManager.GetCurrentClassLogger();
+
+        public int Order { get; set; }
 
         public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
         {
@@ -15,10 +18,7 @@ namespace Heine.Mvc.ActionFilters.Attributes
 
             var statusCode = actionExecutedContext.Response?.StatusCode;
 
-            if (statusCode >= HttpStatusCode.BadRequest && statusCode < HttpStatusCode.InternalServerError)
-            {
-                Logger.Warn(actionExecutedContext.Request, actionExecutedContext.Response);
-            }
+            if (statusCode >= HttpStatusCode.BadRequest && statusCode < HttpStatusCode.InternalServerError) Logger.Warn(actionExecutedContext.Request, actionExecutedContext.Response);
         }
     }
 }

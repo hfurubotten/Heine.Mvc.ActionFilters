@@ -3,13 +3,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
+using Heine.Mvc.ActionFilters.Interfaces;
 
 namespace Heine.Mvc.ActionFilters.Attributes
 {
-    public class RequestResponseCorrelationAttribute : ActionFilterAttribute, IExceptionFilter
+    public class RequestResponseCorrelationAttribute : ActionFilterAttribute, IExceptionFilter, IOrderableFilter
     {
-        private readonly string headerKey;
         private readonly Func<string> defaultValue;
+        private readonly string headerKey;
 
         public RequestResponseCorrelationAttribute() : this("X-CorrelationID", () => Guid.NewGuid().ToString()) { }
 
@@ -20,6 +21,15 @@ namespace Heine.Mvc.ActionFilters.Attributes
             this.headerKey = headerKey;
             this.defaultValue = defaultValue;
         }
+
+        public Task ExecuteExceptionFilterAsync(HttpActionExecutedContext actionExecutedContext, CancellationToken cancellationToken)
+        {
+            OnActionExecuted(actionExecutedContext);
+
+            return Task.FromResult(0);
+        }
+
+        public int Order { get; set; }
 
         public override void OnActionExecuting(HttpActionContext actionContext)
         {
@@ -38,13 +48,6 @@ namespace Heine.Mvc.ActionFilters.Attributes
             if (actionExecutedContext.Response.Headers.Contains(headerKey)) return;
 
             actionExecutedContext.Response.Headers.Add(headerKey, actionExecutedContext.Request.Headers.GetValues(headerKey));
-        }
-
-        public Task ExecuteExceptionFilterAsync(HttpActionExecutedContext actionExecutedContext, CancellationToken cancellationToken)
-        {
-            OnActionExecuted(actionExecutedContext);
-
-            return Task.FromResult(0);
         }
     }
 }
