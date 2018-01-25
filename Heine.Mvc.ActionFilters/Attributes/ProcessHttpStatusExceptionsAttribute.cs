@@ -6,12 +6,17 @@ using NLog;
 
 namespace Heine.Mvc.ActionFilters.Attributes
 {
+    /// <remarks>
+    ///     Make sure the delegate cannot fail with an unhandled exception.
+    /// </remarks>
     public delegate void OnActionExecutedDelegate(HttpActionExecutedContext actionExecutedContext);
 
     public sealed class ProcessHttpStatusExceptionsAttribute : ExceptionFilterAttribute
     {
         private readonly OnActionExecutedDelegate[] onActionExecutedDelegates;
         public bool ShouldLog = true;
+
+        public ProcessHttpStatusExceptionsAttribute() { }
 
         public ProcessHttpStatusExceptionsAttribute(params OnActionExecutedDelegate[] onActionExecutedDelegates)
         {
@@ -39,10 +44,7 @@ namespace Heine.Mvc.ActionFilters.Attributes
                     actionExecutedContext.ActionContext.Response = actionExecutedContext.Request.CreateErrorResponse(httpEx.StatusCode, httpEx.Message);
                 }
 
-                foreach (var onActionExecutedDelegate in onActionExecutedDelegates)
-                {
-                    onActionExecutedDelegate(actionExecutedContext);
-                }
+                foreach (var onActionExecutedDelegate in onActionExecutedDelegates) onActionExecutedDelegate(actionExecutedContext);
 
                 if (ShouldLog)
                     Logger.Log(httpEx.LogLevel, actionExecutedContext.Request, actionExecutedContext.Response);
