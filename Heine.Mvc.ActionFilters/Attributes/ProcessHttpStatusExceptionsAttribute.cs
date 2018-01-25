@@ -6,9 +6,17 @@ using NLog;
 
 namespace Heine.Mvc.ActionFilters.Attributes
 {
+    public delegate void OnActionExecutedDelegate(HttpActionExecutedContext actionExecutedContext);
+
     public sealed class ProcessHttpStatusExceptionsAttribute : ExceptionFilterAttribute
     {
+        private readonly OnActionExecutedDelegate[] onActionExecutedDelegates;
         public bool ShouldLog = true;
+
+        public ProcessHttpStatusExceptionsAttribute(params OnActionExecutedDelegate[] onActionExecutedDelegates)
+        {
+            this.onActionExecutedDelegates = onActionExecutedDelegates;
+        }
 
         private ILogger Logger { get; } = LogManager.GetCurrentClassLogger();
 
@@ -29,6 +37,11 @@ namespace Heine.Mvc.ActionFilters.Attributes
                 {
                     actionExecutedContext.Response = actionExecutedContext.Request.CreateErrorResponse(httpEx.StatusCode, httpEx.Message);
                     actionExecutedContext.ActionContext.Response = actionExecutedContext.Request.CreateErrorResponse(httpEx.StatusCode, httpEx.Message);
+                }
+
+                foreach (var onActionExecutedDelegate in onActionExecutedDelegates)
+                {
+                    onActionExecutedDelegate(actionExecutedContext);
                 }
 
                 if (ShouldLog)
