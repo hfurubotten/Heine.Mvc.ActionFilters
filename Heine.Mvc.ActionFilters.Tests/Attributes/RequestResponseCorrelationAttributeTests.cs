@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
-using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using FluentAssertions;
 using Heine.Mvc.ActionFilters.Attributes;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 
 namespace Heine.Mvc.ActionFilters.Tests.Attributes
 {
