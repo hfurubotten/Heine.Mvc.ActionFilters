@@ -29,7 +29,5 @@ namespace Heine.Mvc.ActionFilters.ActionFilterAttributes
 
             actionContext.Request.Headers.Add(headerKey, defaultValue());
         }
-
-        public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext) { }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Heine.Mvc.ActionFilters.Extensions;
 using Heine.Mvc.ActionFilters.Interfaces;
@@ -20,19 +19,14 @@ namespace Heine.Mvc.ActionFilters.ActionFilterAttributes
         private ILogger Logger { get; } = LogManager.GetCurrentClassLogger();
 
         public int Order { get; set; }
-
-        /// <inheritdoc />
-        public override void OnActionExecuting(HttpActionContext actionContext)
-        {
-            Logger.Debug("Request: {0}", actionContext.Request.AsFormattedString());
-
-            base.OnActionExecuting(actionContext);
-        }
-
+        
         /// <inheritdoc />
         public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
         {
             if (actionExecutedContext.Response != null)
+            {
+                Logger.Debug("Request: {0}", actionExecutedContext.Request.AsFormattedString());
+
                 if (actionExecutedContext.Response.IsSuccessStatusCode)
                     Logger.Debug("Response: {0}", actionExecutedContext.Response.AsFormattedString());
 
@@ -41,6 +35,7 @@ namespace Heine.Mvc.ActionFilters.ActionFilterAttributes
 
                 else
                     Logger.Error("Response: {0}", actionExecutedContext.Response.AsFormattedString());
+            }
 
             base.OnActionExecuted(actionExecutedContext);
         }

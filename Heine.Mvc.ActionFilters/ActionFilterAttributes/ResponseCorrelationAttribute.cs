@@ -1,6 +1,5 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Heine.Mvc.ActionFilters.Interfaces;
 
@@ -18,9 +17,7 @@ namespace Heine.Mvc.ActionFilters.ActionFilterAttributes
         }
 
         public int Order { get; set; }
-
-        public override void OnActionExecuting(HttpActionContext actionContext) { }
-
+        
         public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
         {
             if (actionExecutedContext?.Request?.Headers == null) return;
