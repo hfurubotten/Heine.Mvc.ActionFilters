@@ -60,10 +60,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\AuditRequestAttribute.cs" />
+    <Compile Include="ActionFilterAttributes\AuditRequestAttribute.cs" />
+    <Compile Include="ActionFilterAttributes\ResponseCorrelationAttribute.cs" />
     <Compile Include="Exceptions\BadRequestException.cs" />
     <Compile Include="Exceptions\ConflictException.cs" />
-    <Compile Include="Attributes\RequestResponseCorrelationAttribute.cs" />
+    <Compile Include="ActionFilterAttributes\RequestCorrelationAttribute.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="Extensions\HttpContentExtensions.cs" />
     <Compile Include="Extensions\HttpRequestMessageExtensions.cs" />
@@ -71,16 +72,16 @@
     <Compile Include="Exceptions\HttpStatusException.cs" />
     <Compile Include="Extensions\LoggerExtensions.cs" />
     <Compile Include="Interfaces\IAuditable.cs" />
-    <Compile Include="Attributes\LogAllTrafficAttribute.cs" />
-    <Compile Include="Attributes\LogClientErrorsAttribute.cs" />
-    <Compile Include="Attributes\LogExceptionAttribute.cs" />
-    <Compile Include="Attributes\GuidNotEmptyAttribute.cs" />
+    <Compile Include="ActionFilterAttributes\LogAllTrafficAttribute.cs" />
+    <Compile Include="ActionFilterAttributes\LogClientErrorsAttribute.cs" />
+    <Compile Include="ExceptionFilterAttributes\LogExceptionAttribute.cs" />
+    <Compile Include="ValidationAttributes\GuidNotEmptyAttribute.cs" />
     <Compile Include="Exceptions\NotFoundException.cs" />
-    <Compile Include="Attributes\ProcessHttpStatusExceptionsAttribute.cs" />
-    <Compile Include="Attributes\ReportObsoleteUsageAttribute.cs" />
+    <Compile Include="ExceptionFilterAttributes\ProcessHttpStatusExceptionsAttribute.cs" />
+    <Compile Include="ActionFilterAttributes\ReportObsoleteUsageAttribute.cs" />
     <Compile Include="Interfaces\IOrderableFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Attributes\ValidateModelAttribute.cs" />
+    <Compile Include="ActionFilterAttributes\ValidateModelAttribute.cs" />
     <Compile Include="Providers\OrderedFilterProvider.cs" />
     <Compile Include="Services\WebApiExceptionLogger.cs" />
   </ItemGroup>
@@ -89,6 +90,7 @@
     <None Include="Heine.Mvc.ActionFilters.nuspec" />
     <None Include="nuget_pack.bat" />
     <None Include="packages.config" />
+    <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

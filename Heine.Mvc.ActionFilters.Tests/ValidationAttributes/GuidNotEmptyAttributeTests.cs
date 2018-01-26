@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using FluentAssertions;
-using Heine.Mvc.ActionFilters.Attributes;
+using Heine.Mvc.ActionFilters.ValidationAttributes;
 using NUnit.Framework;
 
-namespace Heine.Mvc.ActionFilters.Tests.Attributes
+namespace Heine.Mvc.ActionFilters.Tests.ValidationAttributes
 {
     public class GuidModel
     {

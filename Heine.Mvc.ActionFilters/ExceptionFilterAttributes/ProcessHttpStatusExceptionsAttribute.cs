@@ -5,7 +5,7 @@ using Heine.Mvc.ActionFilters.Extensions;
 using Heine.Mvc.ActionFilters.Interfaces;
 using NLog;
 
-namespace Heine.Mvc.ActionFilters.Attributes
+namespace Heine.Mvc.ActionFilters.ExceptionFilterAttributes
 {
     /// <remarks>
     ///     Make sure the delegate cannot fail with an unhandled exception.

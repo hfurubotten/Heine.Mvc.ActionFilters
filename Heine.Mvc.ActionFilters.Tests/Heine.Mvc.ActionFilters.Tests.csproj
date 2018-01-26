@@ -94,14 +94,15 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="Attributes\AuditRequestAttributeTests.cs" />
-    <Compile Include="Attributes\GuidNotEmptyAttributeTests.cs" />
-    <Compile Include="Attributes\RequestResponseCorrelationAttributeTests.cs" />
+    <Compile Include="ActionFilterAttributes\AuditRequestAttributeTests.cs" />
+    <Compile Include="ActionFilterAttributes\ResponseCorrelationAttributeTests.cs" />
+    <Compile Include="ValidationAttributes\GuidNotEmptyAttributeTests.cs" />
+    <Compile Include="ActionFilterAttributes\RequestCorrelationAttributeTests.cs" />
     <Compile Include="HttpActionContextFactory.cs" />
-    <Compile Include="Attributes\ProcessHttpStatusExceptionsAttributeTests.cs" />
-    <Compile Include="Attributes\ReportObsoleteUsageAttributeTests.cs" />
+    <Compile Include="ExceptionFilterAttributes\ProcessHttpStatusExceptionsAttributeTests.cs" />
+    <Compile Include="ActionFilterAttributes\ReportObsoleteUsageAttributeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Attributes\ValidateModelAttributeTests.cs" />
+    <Compile Include="ActionFilterAttributes\ValidateModelAttributeTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

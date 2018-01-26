@@ -4,7 +4,7 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Heine.Mvc.ActionFilters.Interfaces;
 
-namespace Heine.Mvc.ActionFilters.Attributes
+namespace Heine.Mvc.ActionFilters.ActionFilterAttributes
 {
     public sealed class AuditRequestAttribute : ActionFilterAttribute, IOrderableFilter
     {

@@ -3,14 +3,14 @@ using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Web.Http.Controllers;
 using FluentAssertions;
-using Heine.Mvc.ActionFilters.Attributes;
+using Heine.Mvc.ActionFilters.ActionFilterAttributes;
 using Moq;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
 using NUnit.Framework;
 
-namespace Heine.Mvc.ActionFilters.Tests.Attributes
+namespace Heine.Mvc.ActionFilters.Tests.ActionFilterAttributes
 {
     [TestFixture]
     public class ReportObsoleteUsageAttributeTests

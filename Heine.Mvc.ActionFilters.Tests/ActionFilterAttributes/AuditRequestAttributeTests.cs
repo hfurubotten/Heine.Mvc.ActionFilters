@@ -1,12 +1,12 @@
 ﻿using System.IO;
 using System.Security.Principal;
 using System.Web;
-using Heine.Mvc.ActionFilters.Attributes;
+using Heine.Mvc.ActionFilters.ActionFilterAttributes;
 using Heine.Mvc.ActionFilters.Interfaces;
 using Moq;
 using NUnit.Framework;
 
-namespace Heine.Mvc.ActionFilters.Tests.Attributes
+namespace Heine.Mvc.ActionFilters.Tests.ActionFilterAttributes
 {
     [TestFixture]
     public class AuditRequestAttributeTests

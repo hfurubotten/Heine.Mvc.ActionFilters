@@ -7,7 +7,7 @@ using Heine.Mvc.ActionFilters.Interfaces;
 using Newtonsoft.Json;
 using NLog;
 
-namespace Heine.Mvc.ActionFilters.Attributes
+namespace Heine.Mvc.ActionFilters.ActionFilterAttributes
 {
     public sealed class ValidateModelAttribute : ActionFilterAttribute, IOrderableFilter
     {

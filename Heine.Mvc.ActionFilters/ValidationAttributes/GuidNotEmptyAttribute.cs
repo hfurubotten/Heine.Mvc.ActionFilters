@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Heine.Mvc.ActionFilters.Attributes
+namespace Heine.Mvc.ActionFilters.ValidationAttributes
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true)]
     public sealed class GuidNotEmptyAttribute : ValidationAttribute

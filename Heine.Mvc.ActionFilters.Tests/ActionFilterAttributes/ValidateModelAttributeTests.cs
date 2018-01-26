@@ -1,9 +1,9 @@
 ﻿using System.Net;
 using FluentAssertions;
-using Heine.Mvc.ActionFilters.Attributes;
+using Heine.Mvc.ActionFilters.ActionFilterAttributes;
 using NUnit.Framework;
 
-namespace Heine.Mvc.ActionFilters.Tests.Attributes
+namespace Heine.Mvc.ActionFilters.Tests.ActionFilterAttributes
 {
     [TestFixture]
     public class ValidateModelAttributeTests

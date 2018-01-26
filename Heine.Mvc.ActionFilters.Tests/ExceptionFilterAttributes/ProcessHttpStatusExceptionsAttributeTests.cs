@@ -3,11 +3,11 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Heine.Mvc.ActionFilters.Attributes;
+using Heine.Mvc.ActionFilters.ExceptionFilterAttributes;
 using Heine.Mvc.ActionFilters.Exceptions;
 using NUnit.Framework;
 
-namespace Heine.Mvc.ActionFilters.Tests.Attributes
+namespace Heine.Mvc.ActionFilters.Tests.ExceptionFilterAttributes
 {
     [TestFixture]
     public class ProcessHttpStatusExceptionsAttributeTests
