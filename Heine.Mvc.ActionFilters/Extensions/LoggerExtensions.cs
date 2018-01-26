@@ -27,7 +27,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
             Error(logger, exception, request);
         }
 
-        public static void Error(this ILogger logger, Exception exception, string request)
+        private static void Error(this ILogger logger, Exception exception, string request)
         {
             logger.Error(
                 exception,
@@ -64,7 +64,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
             Log(logger, logLevel, request.AsFormattedString(), response.AsFormattedString(), message);
         }
 
-        public static void Log(this ILogger logger, LogLevel logLevel, string request, string response, string message = "")
+        private static void Log(this ILogger logger, LogLevel logLevel, string request, string response, string message = "")
         {
             logger.Log(
                 logLevel,
