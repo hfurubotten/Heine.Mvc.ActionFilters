@@ -8,7 +8,7 @@ namespace Heine.Mvc.ActionFilters.ExceptionFilterAttributes
 {
     public sealed class LogExceptionAttribute : ExceptionFilterAttribute, IOrderableFilter
     {
-        private ILogger Logger { get; } = LogManager.GetCurrentClassLogger(typeof(LogExceptionAttribute));
+        private ILogger Logger { get; } = LogManager.GetLogger(typeof(LogExceptionAttribute).FullName);
 
         public int Order { get; set; }
 

@@ -17,7 +17,7 @@ namespace Heine.Mvc.ActionFilters.ActionFilterAttributes
         /// </summary>
         public LogLevel Level = LogLevel.Warn;
 
-        private ILogger Logger { get; } = LogManager.GetCurrentClassLogger(typeof(ReportObsoleteUsageAttribute));
+        private ILogger Logger { get; } = LogManager.GetLogger(typeof(ReportObsoleteUsageAttribute).FullName);
 
         public int Order { get; set; }
 

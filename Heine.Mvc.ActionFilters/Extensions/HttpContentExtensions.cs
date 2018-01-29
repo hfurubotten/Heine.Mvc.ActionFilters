@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Xml.Linq;
@@ -10,31 +11,33 @@ namespace Heine.Mvc.ActionFilters.Extensions
 {
     public static class HttpContentExtensions
     {
-        internal static string GetBody(this HttpContent content)
+        public static string ReadAsString(this HttpContent httpContent)
         {
-            if (content == null) return null;
+            if (httpContent == null) return null;
 
-            var contentStream = content.ReadAsStreamAsync().ConfigureAwait(false).GetAwaiter().GetResult();
-            contentStream.Position = 0;
-            var streamReader = new StreamReader(contentStream, Encoding.UTF8);
-            var requestBody = streamReader.ReadToEnd();
-            contentStream.Position = 0;
-            return requestBody;
+            string content;
+
+            try
+            {
+                var contentStream = httpContent.ReadAsStreamAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+                contentStream.Position = 0;
+                var streamReader = new StreamReader(contentStream, Encoding.UTF8);
+                content = streamReader.ReadToEnd();
+                contentStream.Position = 0;
+            }
+            catch (NotSupportedException e)
+            {
+                content = $"Unable to read body of HTTP content:\n{string.Join("\n", e.GetMessages().Select(message => $"- '{message}'"))}";
+            }
+
+            return content;
         }
 
         public static string AsFormattedString(this HttpContent httpContent)
         {
             string ReadContent()
             {
-                string body;
-                try
-                {
-                    body = httpContent.GetBody();
-                }
-                catch (NotSupportedException e)
-                {
-                    body = $"Unable to read body of HTTP content: {string.Join("\n", e.GetMessages())}";
-                }
+                var body = httpContent.ReadAsString();
 
                 switch (httpContent.Headers?.ContentType?.MediaType)
                 {

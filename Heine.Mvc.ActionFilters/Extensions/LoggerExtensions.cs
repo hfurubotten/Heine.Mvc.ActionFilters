@@ -32,7 +32,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
             logger.Error(
                 exception,
                 "Exception Message(s):\n{0}\n\nRequest: {1}",
-                string.Join(Environment.NewLine, exception.GetMessages().Select(x => $"- '{x}'")),
+                string.Join(Environment.NewLine, exception.GetMessages().Select(message => $"- '{message}'")),
                 request
             );
         }

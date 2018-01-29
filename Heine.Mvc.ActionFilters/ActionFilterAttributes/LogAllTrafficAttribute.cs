@@ -16,7 +16,7 @@ namespace Heine.Mvc.ActionFilters.ActionFilterAttributes
     /// </remarks>
     public sealed class LogAllTrafficAttribute : ActionFilterAttribute, IOrderableFilter
     {
-        private ILogger Logger { get; } = LogManager.GetCurrentClassLogger(typeof(LogAllTrafficAttribute));
+        private ILogger Logger { get; } = LogManager.GetLogger(typeof(LogAllTrafficAttribute).FullName);
 
         public int Order { get; set; }
         
