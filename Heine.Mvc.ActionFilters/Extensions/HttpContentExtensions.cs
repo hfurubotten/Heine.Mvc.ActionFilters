@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Xml.Linq;
@@ -13,11 +14,11 @@ namespace Heine.Mvc.ActionFilters.Extensions
         {
             if (content == null) return null;
 
-            var requestStream = content.ReadAsStreamAsync().ConfigureAwait(false).GetAwaiter().GetResult();
-            requestStream.Position = 0;
-            var streamReader = new StreamReader(requestStream, Encoding.UTF8);
+            var contentStream = content.ReadAsStreamAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+            contentStream.Position = 0;
+            var streamReader = new StreamReader(contentStream, Encoding.UTF8);
             var requestBody = streamReader.ReadToEnd();
-            requestStream.Position = 0;
+            contentStream.Position = 0;
             return requestBody;
         }
 
@@ -25,7 +26,15 @@ namespace Heine.Mvc.ActionFilters.Extensions
         {
             string ReadContent()
             {
-                var body = httpContent.GetBody();
+                string body;
+                try
+                {
+                    body = httpContent.GetBody();
+                }
+                catch (NotSupportedException e)
+                {
+                    body = $"Unable to read body of HTTP content: {string.Join("\n", e.GetMessages())}";
+                }
 
                 switch (httpContent.Headers?.ContentType?.MediaType)
                 {
