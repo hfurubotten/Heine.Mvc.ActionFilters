@@ -31,8 +31,8 @@ namespace Heine.Mvc.ActionFilters.Extensions
         {
             logger.Error(
                 exception,
-                "Exception Message(s): {0}\n\n\nRequest: {1}",
-                string.Join(Environment.NewLine, exception.GetMessages()),
+                "Exception Message(s):\n{0}\n\nRequest: {1}",
+                string.Join(Environment.NewLine, exception.GetMessages().Select(x => $"- '{x}'")),
                 request
             );
         }
@@ -69,7 +69,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
             logger.Log(
                 logLevel,
                 "{0}" +
-                "Request: {1}\n\n\n" +
+                "Request: {1}\n" +
                 "Response: {2}\n",
                 string.IsNullOrWhiteSpace(message) ? string.Empty : $"{message}\n",
                 request,

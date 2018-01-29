@@ -8,7 +8,7 @@ namespace Heine.Mvc.ActionFilters.ActionFilterAttributes
 {
     public sealed class LogClientErrorsAttribute : ActionFilterAttribute, IOrderableFilter
     {
-        private ILogger Logger { get; } = LogManager.GetCurrentClassLogger();
+        private ILogger Logger { get; } = LogManager.GetCurrentClassLogger(typeof(LogClientErrorsAttribute));
 
         public int Order { get; set; }
 

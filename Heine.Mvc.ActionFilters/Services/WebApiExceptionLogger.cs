@@ -7,7 +7,7 @@ namespace Heine.Mvc.ActionFilters.Services
 {
     public class WebApiExceptionLogger : ExceptionLogger
     {
-        private ILogger Logger { get; } = LogManager.GetCurrentClassLogger();
+        private ILogger Logger { get; } = LogManager.GetCurrentClassLogger(typeof(WebApiExceptionLogger));
 
         /// <summary>
         ///     The maximum number of charachters from the request body that will be logged

@@ -27,7 +27,7 @@ namespace Heine.Mvc.ActionFilters.ExceptionFilterAttributes
             this.onActionExecutedDelegates = onActionExecutedDelegates ?? new OnActionExecutedDelegate[0];
         }
 
-        private ILogger Logger { get; } = LogManager.GetCurrentClassLogger();
+        private ILogger Logger { get; } = LogManager.GetCurrentClassLogger(typeof(ProcessHttpStatusExceptionsAttribute));
 
         public int Order { get; set; }
 

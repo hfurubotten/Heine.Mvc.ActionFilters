@@ -13,7 +13,7 @@ namespace Heine.Mvc.ActionFilters.ActionFilterAttributes
     {
         public bool LogModelErrors = true;
 
-        private ILogger Logger { get; } = LogManager.GetCurrentClassLogger();
+        private ILogger Logger { get; } = LogManager.GetCurrentClassLogger(typeof(ValidateModelAttribute));
 
         public int Order { get; set; }
 
