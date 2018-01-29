@@ -13,7 +13,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
     {
         public static string ReadAsString(this HttpContent httpContent)
         {
-            if (httpContent == null) return null;
+            if (httpContent == null) return string.Empty;
 
             string content;
 
