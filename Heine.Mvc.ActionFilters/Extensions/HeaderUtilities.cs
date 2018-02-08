@@ -32,7 +32,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
 
                             if (ObfuscatedHeaders.Contains(headerKey))
                             {
-                                headerValue = new string('*', headerValue.Length);
+                                headerValue = new string('*', 10);
                             }
 
                             stringBuilder.Append("  ");
