@@ -11,6 +11,22 @@ namespace Heine.Mvc.ActionFilters.Extensions
 {
     public static class HttpContentExtensions
     {
+        public static HttpContent Clone(this HttpContent content)
+        {
+            if (content == null) return null;
+
+            var ms = new MemoryStream();
+            content.CopyToAsync(ms).Wait();
+            ms.Position = 0;
+
+            var clone = new StreamContent(ms);
+            foreach (var header in content.Headers)
+            {
+                clone.Headers.Add(header.Key, header.Value);
+            }
+            return clone;
+        }
+
         public static string ReadAsString(this HttpContent httpContent)
         {
             if (httpContent == null) return string.Empty;

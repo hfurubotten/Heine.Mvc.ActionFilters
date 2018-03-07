@@ -5,6 +5,25 @@ namespace Heine.Mvc.ActionFilters.Extensions
 {
     public static class HttpRequestMessageExtensions
     {
+        public static HttpRequestMessage Clone(this HttpRequestMessage request)
+        {
+            var clone = new HttpRequestMessage(request.Method, request.RequestUri)
+            {
+                Content = request.Content.Clone(),
+                Version = request.Version
+            };
+            foreach (var prop in request.Properties)
+            {
+                clone.Properties.Add(prop);
+            }
+            foreach (var header in request.Headers)
+            {
+                clone.Headers.TryAddWithoutValidation(header.Key, header.Value);
+            }
+
+            return clone;
+        }
+
         public static string AsFormattedString(this HttpRequestMessage request)
         {
             if (request == null) return "<empty>";
