@@ -4,7 +4,6 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Heine.Mvc.ActionFilters.Extensions;
 using Heine.Mvc.ActionFilters.Interfaces;
-using Newtonsoft.Json;
 using NLog;
 
 namespace Heine.Mvc.ActionFilters.ActionFilterAttributes
@@ -24,11 +23,10 @@ namespace Heine.Mvc.ActionFilters.ActionFilterAttributes
             actionContext.Response = actionContext.Request.CreateErrorResponse(HttpStatusCode.BadRequest, actionContext.ModelState);
 
             if (LogModelErrors)
-                LoggerExtensions.Warn(
-                    Logger,
-                    actionContext.Request.AsFormattedString(),
-                    JsonConvert.SerializeObject(actionContext.ModelState, Formatting.Indented),
-                    "Model state on client request is invalid.");
+                Logger.Warn(
+                    actionContext.Request,
+                    actionContext.Response,
+                    "Model state on client request is invalid.\n");
         }
     }
 }

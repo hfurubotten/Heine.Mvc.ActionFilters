@@ -51,6 +51,21 @@ namespace Heine.Mvc.ActionFilters.Extensions
 
         public static string AsFormattedString(this HttpContent httpContent)
         {
+            if (httpContent == null) return string.Empty;
+
+            var stringBuilder = new StringBuilder();
+
+            var content = ReadContent();
+
+            if (!string.IsNullOrWhiteSpace(content))
+            {
+                stringBuilder.AppendLine();
+                stringBuilder.AppendLine("Body:");
+                stringBuilder.AppendLine(content);
+            }
+
+            return stringBuilder.ToString();
+
             string ReadContent()
             {
                 var body = httpContent.ReadAsString();
@@ -69,21 +84,23 @@ namespace Heine.Mvc.ActionFilters.Extensions
 
                 return body;
             }
+        }
 
-            if (httpContent == null) return string.Empty;
+        internal static object ReadContent(this HttpContent httpContent)
+        {
+            var body = httpContent?.ReadAsString();
 
-            var stringBuilder = new StringBuilder();
-
-            var content = ReadContent();
-
-            if (!string.IsNullOrWhiteSpace(content))
+            switch (httpContent?.Headers?.ContentType?.MediaType)
             {
-                stringBuilder.AppendLine();
-                stringBuilder.AppendLine("Body:");
-                stringBuilder.AppendLine(content);
+                case "application/json":
+                    try { return JToken.Parse(body); }
+                    catch { return body; }
+                case "application/xml":
+                    try { return XDocument.Parse(body); }
+                    catch { return body; }
             }
 
-            return stringBuilder.ToString();
+            return body;
         }
     }
 }

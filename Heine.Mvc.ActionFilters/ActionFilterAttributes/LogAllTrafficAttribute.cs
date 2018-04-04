@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Heine.Mvc.ActionFilters.Extensions;
 using Heine.Mvc.ActionFilters.Interfaces;
@@ -19,22 +20,30 @@ namespace Heine.Mvc.ActionFilters.ActionFilterAttributes
         private ILogger Logger { get; } = LogManager.GetLogger(typeof(LogAllTrafficAttribute).FullName);
 
         public int Order { get; set; }
-        
+
+        public override void OnActionExecuting(HttpActionContext actionContext)
+        {
+            HttpRequestLoggerExtensions.Debug(Logger, actionContext.Request); 
+
+            base.OnActionExecuting(actionContext);
+        }
+
         /// <inheritdoc />
         public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
         {
             if (actionExecutedContext.Response != null)
             {
-                Logger.Debug("Request: {0}", actionExecutedContext.Request.AsFormattedString());
+                var request = actionExecutedContext.Request;
+                var response = actionExecutedContext.Response;
 
-                if (actionExecutedContext.Response.IsSuccessStatusCode)
-                    Logger.Debug("Response: {0}", actionExecutedContext.Response.AsFormattedString());
+                if (response.IsSuccessStatusCode)
+                    Logger.Debug(request, response, "Request + Response\n");
 
-                else if (actionExecutedContext.Response.StatusCode < HttpStatusCode.InternalServerError)
-                    Logger.Warn("Response: {0}", actionExecutedContext.Response.AsFormattedString());
+                else if (response.StatusCode < HttpStatusCode.InternalServerError)
+                    Logger.Warn(request, response, "Request + Response\n");
 
                 else
-                    Logger.Error("Response: {0}", actionExecutedContext.Response.AsFormattedString());
+                    Logger.Error(request, response, "Request + Response\n");
             }
 
             base.OnActionExecuted(actionExecutedContext);

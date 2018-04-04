@@ -1,42 +1,19 @@
 ﻿using System;
-using System.Linq;
 using System.Net.Http;
 using NLog;
 
 namespace Heine.Mvc.ActionFilters.Extensions
 {
-    public static class LoggerExtensions
+    public static class HttpRequestResponseLoggerExtensions
     {
-        public static void Error(this ILogger logger, Exception exception, HttpRequestMessage httpRequestMessage)
+        public static void Debug(this ILogger logger, HttpRequestMessage request, HttpResponseMessage response, string message = "")
         {
-            if (!logger.IsErrorEnabled) return;
-
-            Error(logger, exception, httpRequestMessage.AsFormattedString());
+            logger.Log(LogLevel.Debug, request, response, message);
         }
-
-        public static void Error(this ILogger logger, Exception exception, HttpRequestMessage httpRequestMessage, int requestMaxLogLength)
+        public static void Info(this ILogger logger, HttpRequestMessage request, HttpResponseMessage response, string message = "")
         {
-            if (!logger.IsErrorEnabled) return;
-
-            var request = httpRequestMessage.AsFormattedString();
-
-            // Truncate large requests to prevent bloating log
-            if (request.Length > requestMaxLogLength)
-                request = new string(request.Take(requestMaxLogLength).ToArray()) + "...";
-
-            Error(logger, exception, request);
+            logger.Log(LogLevel.Info, request, response, message);
         }
-
-        private static void Error(this ILogger logger, Exception exception, string request)
-        {
-            logger.Error(
-                exception,
-                "Exception Message(s):\n{0}\n\nRequest: {1}",
-                string.Join(Environment.NewLine, exception.GetMessages().Select(message => $"- '{message}'")),
-                request
-            );
-        }
-
         public static void Warn(this ILogger logger, HttpRequestMessage request, HttpResponseMessage response, string message = "")
         {
             logger.Log(LogLevel.Warn, request, response, message);
@@ -47,33 +24,206 @@ namespace Heine.Mvc.ActionFilters.Extensions
             logger.Log(LogLevel.Error, request, response, message);
         }
 
-        public static void Warn(this ILogger logger, string request, string response, string message = "")
-        {
-            logger.Log(LogLevel.Warn, request, response, message);
-        }
-
-        public static void Error(this ILogger logger, string request, string response, string message = "")
-        {
-            logger.Log(LogLevel.Error, request, response, message);
-        }
-
         public static void Log(this ILogger logger, LogLevel logLevel, HttpRequestMessage request, HttpResponseMessage response, string message = "")
         {
             if (!logger.IsEnabled(logLevel)) return;
 
-            Log(logger, logLevel, request.AsFormattedString(), response.AsFormattedString(), message);
+            logger.Log(logLevel, message + "Request: \n" +
+                "Method: {HttpMethod}, \n" +
+                "RequestUri: {RequestUri}, \n" +
+                "Version: {HttpRequestVersion}, \n" +
+                "Content Class Name: {HttpRequestContentClassName}, \n" +
+                "Headers: {HttpRequestHeaders} \n\n" +
+                "Body: \n{HttpRequestBody} \n" +
+                "\n\n" +
+                "Response: \n" +
+                "HttpStatusCode: {HttpStatusCode} \n" +
+                "Status Reason: {HttpStatusReason} \n" +
+                "Http version: {HttpResponseVersion} \n" +
+                "Content Class Name: {HttpResponseContentClassName} \n" +
+                "Headers: {HttpResponseHeaders} \n\n" +
+                "Body: \n{HttpResponseBody}", 
+
+                request.Method,
+                request.RequestUri?.ToString() ?? "<null>",
+                request.Version.ToString(),
+                request.Content?.GetType().FullName ?? "<null>",
+                HeaderUtilities.CloneHeaders(request.Headers, request.Content?.Headers),
+                request.Content?.ReadContent(), 
+
+                (int)response.StatusCode,
+                response.ReasonPhrase,
+                response.Version.ToString(),
+                response.Content?.GetType().FullName,
+                HeaderUtilities.CloneHeaders(response.Headers, response.Content?.Headers),
+                response.Content.ReadContent());
         }
 
-        private static void Log(this ILogger logger, LogLevel logLevel, string request, string response, string message = "")
+        public static void Log(this ILogger logger, LogLevel logLevel, Exception ex, HttpRequestMessage request, HttpResponseMessage response, string message = "")
         {
-            logger.Log(
-                logLevel,
-                "{0}" +
-                "Request: {1}\n" +
-                "Response: {2}\n",
-                string.IsNullOrWhiteSpace(message) ? string.Empty : $"{message}\n",
-                request,
-                response);
+            if (!logger.IsEnabled(logLevel)) return;
+
+            logger.Log(logLevel, ex, message + "Request: \n" +
+                "Method: {HttpMethod}, \n" +
+                "RequestUri: {RequestUri}, \n" +
+                "Version: {HttpRequestVersion}, \n" +
+                "Content Class Name: {HttpRequestContentClassName}, \n" +
+                "Headers: {HttpRequestHeaders} \n\n" +
+                "Body: \n{HttpRequestBody} \n" +
+                "\n\n" +
+                "Response: \n" +
+                "HttpStatusCode: {HttpStatusCode} \n" +
+                "Status Reason: {HttpStatusReason} \n" +
+                "Http version: {HttpResponseVersion} \n" +
+                "Content Class Name: {HttpResponseContentClassName} \n" +
+                "Headers: {HttpResponseHeaders} \n\n" +
+                "Body: \n{HttpResponseBody}", 
+
+                request.Method,
+                request.RequestUri?.ToString() ?? "<null>",
+                request.Version.ToString(),
+                request.Content?.GetType().FullName ?? "<null>",
+                HeaderUtilities.CloneHeaders(request.Headers, request.Content?.Headers),
+                request.Content?.ReadContent(), 
+
+                (int)response.StatusCode,
+                response.ReasonPhrase,
+                response.Version.ToString(),
+                response.Content?.GetType().FullName,
+                HeaderUtilities.CloneHeaders(response.Headers, response.Content?.Headers),
+                response.Content.ReadContent());
+        }
+    }
+
+    public static class HttpResponseLoggerExtensions
+    {
+        public static void Error(this ILogger logger, HttpResponseMessage response)
+        {
+            Log(logger, LogLevel.Error, response);
+        }
+
+        public static void Warn(this ILogger logger, HttpResponseMessage response)
+        {
+            Log(logger, LogLevel.Warn, response);
+        }
+
+        public static void Info(this ILogger logger, HttpResponseMessage response)
+        {
+            Log(logger, LogLevel.Info, response);
+        }
+
+        public static void Debug(this ILogger logger, HttpResponseMessage response)
+        {
+            Log(logger, LogLevel.Debug, response);
+        }
+
+        public static void Log(this ILogger logger, LogLevel logLevel, HttpResponseMessage response, string message = "")
+        {
+            if (!logger.IsEnabled(logLevel)) return;
+
+            logger.Log(logLevel, message + "Response: \n" +
+                "HttpStatusCode: {HttpStatusCode} \n" +
+                "Status Reason: {HttpStatusReason} \n" +
+                "Http version: {HttpResponseVersion} \n" +
+                "Content Class Name: {HttpResponseContentClassName} \n" +
+                "Headers: {HttpResponseHeaders} \n\n" +
+                "Body: \n{HttpResponseBody}", 
+                (int)response.StatusCode,
+                response.ReasonPhrase,
+                response.Version.ToString(),
+                response.Content?.GetType().FullName,
+                HeaderUtilities.CloneHeaders(response.Headers, response.Content?.Headers),
+                response.Content.ReadContent());
+        }
+
+        public static void Log(this ILogger logger, LogLevel logLevel, Exception ex, HttpResponseMessage response, string message = "")
+        {
+            if (!logger.IsEnabled(logLevel)) return;
+
+            logger.Log(logLevel, ex, message + "Response: \n" +
+                "HttpStatusCode: {HttpStatusCode} \n" +
+                "Status Reason: {HttpStatusReason} \n" +
+                "Http version: {HttpResponseVersion} \n" +
+                "Content Class Name: {HttpResponseContentClassName} \n" +
+                "Headers: {HttpResponseHeaders} \n\n" +
+                "Body: \n{HttpResponseBody}", 
+                (int)response.StatusCode,
+                response.ReasonPhrase,
+                response.Version.ToString(),
+                response.Content?.GetType().FullName,
+                HeaderUtilities.CloneHeaders(response.Headers, response.Content?.Headers),
+                response.Content.ReadContent());
+        }
+    }
+
+    public static class HttpRequestLoggerExtensions
+    {
+        public static void Error(this ILogger logger, Exception exception, HttpRequestMessage httpRequestMessage)
+        {
+            Log(logger, LogLevel.Error, exception, httpRequestMessage);
+        }
+
+        public static void Error(this ILogger logger, Exception exception, HttpRequestMessage httpRequestMessage, int requestMaxLogLength)
+        {
+            Log(logger, LogLevel.Error, exception, httpRequestMessage);
+        }
+
+        public static void Error(this ILogger logger, HttpRequestMessage request)
+        {
+            Log(logger, LogLevel.Error, request);
+        }
+
+        public static void Warn(this ILogger logger, HttpRequestMessage request)
+        {
+            Log(logger, LogLevel.Warn, request);
+        }
+
+        public static void Info(this ILogger logger, HttpRequestMessage request)
+        {
+            Log(logger, LogLevel.Info, request);
+        }
+
+        public static void Debug(this ILogger logger, HttpRequestMessage request)
+        {
+            Log(logger, LogLevel.Debug, request);
+        }
+
+        public static void Log(this ILogger logger, LogLevel logLevel, HttpRequestMessage request, string message = "")
+        {
+            if (!logger.IsEnabled(logLevel)) return;
+
+            logger.Log(logLevel, message + "Request: \n" +
+                "Method: {HttpMethod}, \n" +
+                "RequestUri: {RequestUri}, \n" +
+                "Version: {HttpRequestVersion}, \n" +
+                "Content Class Name: {HttpRequestContentClassName}, \n" +
+                "Headers: {HttpRequestHeaders} \n\n" +
+                "Body: \n{HttpRequestBody}", 
+                request.Method,
+                request.RequestUri?.ToString() ?? "<null>",
+                request.Version.ToString(),
+                request.Content?.GetType().FullName ?? "<null>",
+                HeaderUtilities.CloneHeaders(request.Headers, request.Content?.Headers),
+                request.Content?.ReadContent());
+        }
+
+        public static void Log(this ILogger logger, LogLevel logLevel, Exception ex, HttpRequestMessage request, string message = "")
+        {
+            if (!logger.IsEnabled(logLevel)) return;
+
+            logger.Log(logLevel, ex, message + "Request: \n" +
+                "Method: {HttpMethod}, \n" +
+                "RequestUri: {RequestUri}, \n" +
+                "Version: {HttpRequestVersion}, \n" +
+                "Content Class Name: {HttpRequestContentClassName}, \n" +
+                "Headers: {HttpRequestHeaders} \n\n" +
+                "Body: \n{HttpRequestBody}", 
+                request.Method,
+                request.RequestUri?.ToString() ?? "<null>",
+                request.Version.ToString(),
+                request.Content?.GetType().FullName ?? "<null>",
+                HeaderUtilities.CloneHeaders(request.Headers, request.Content?.Headers),
+                request.Content?.ReadContent());
         }
     }
 }

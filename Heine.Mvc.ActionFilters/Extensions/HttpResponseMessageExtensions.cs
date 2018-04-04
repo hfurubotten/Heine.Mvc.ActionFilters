@@ -20,19 +20,19 @@ namespace Heine.Mvc.ActionFilters.Extensions
             return stringBuilder.ToString();
         }
 
-        public static string ToString(this HttpResponseMessage request)
+        public static string ToString(this HttpResponseMessage response)
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.Append("StatusCode: ");
-            stringBuilder.Append((int) request.StatusCode);
+            stringBuilder.Append((int) response.StatusCode);
             stringBuilder.Append(", ReasonPhrase: '");
-            stringBuilder.Append(request.ReasonPhrase ?? "<null>");
+            stringBuilder.Append(response.ReasonPhrase ?? "<null>");
             stringBuilder.Append("', Version: ");
-            stringBuilder.Append(request.Version);
+            stringBuilder.Append(response.Version);
             stringBuilder.Append(", Content: ");
-            stringBuilder.Append(request.Content == null ? "<null>" : request.Content.GetType().FullName);
+            stringBuilder.Append(response.Content == null ? "<null>" : response.Content.GetType().FullName);
             stringBuilder.Append(", Headers:\r\n");
-            stringBuilder.Append(HeaderUtilities.DumpHeaders(request.Headers, request.Content?.Headers));
+            stringBuilder.Append(HeaderUtilities.DumpHeaders(response.Headers, response.Content?.Headers));
             return stringBuilder.ToString();
         }
     }
