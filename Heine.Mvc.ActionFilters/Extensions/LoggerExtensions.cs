@@ -48,14 +48,14 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 request.RequestUri?.ToString() ?? "<null>",
                 request.Version.ToString(),
                 request.Content?.GetType().FullName ?? "<null>",
-                HeaderUtilities.CloneHeaders(request.Headers, request.Content?.Headers),
+                HeaderUtilities.GetLoggableHeaders(request.Headers, request.Content?.Headers),
                 request.Content?.ReadContent(), 
 
                 (int)response.StatusCode,
                 response.ReasonPhrase,
                 response.Version.ToString(),
                 response.Content?.GetType().FullName,
-                HeaderUtilities.CloneHeaders(response.Headers, response.Content?.Headers),
+                HeaderUtilities.GetLoggableHeaders(response.Headers, response.Content?.Headers),
                 response.Content.ReadContent());
         }
 
@@ -83,14 +83,14 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 request.RequestUri?.ToString() ?? "<null>",
                 request.Version.ToString(),
                 request.Content?.GetType().FullName ?? "<null>",
-                HeaderUtilities.CloneHeaders(request.Headers, request.Content?.Headers),
+                HeaderUtilities.GetLoggableHeaders(request.Headers, request.Content?.Headers),
                 request.Content?.ReadContent(), 
 
                 (int)response.StatusCode,
                 response.ReasonPhrase,
                 response.Version.ToString(),
                 response.Content?.GetType().FullName,
-                HeaderUtilities.CloneHeaders(response.Headers, response.Content?.Headers),
+                HeaderUtilities.GetLoggableHeaders(response.Headers, response.Content?.Headers),
                 response.Content.ReadContent());
         }
     }
@@ -132,7 +132,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 response.ReasonPhrase,
                 response.Version.ToString(),
                 response.Content?.GetType().FullName,
-                HeaderUtilities.CloneHeaders(response.Headers, response.Content?.Headers),
+                HeaderUtilities.GetLoggableHeaders(response.Headers, response.Content?.Headers),
                 response.Content.ReadContent());
         }
 
@@ -151,7 +151,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 response.ReasonPhrase,
                 response.Version.ToString(),
                 response.Content?.GetType().FullName,
-                HeaderUtilities.CloneHeaders(response.Headers, response.Content?.Headers),
+                HeaderUtilities.GetLoggableHeaders(response.Headers, response.Content?.Headers),
                 response.Content.ReadContent());
         }
     }
@@ -203,7 +203,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 request.RequestUri?.ToString() ?? "<null>",
                 request.Version.ToString(),
                 request.Content?.GetType().FullName ?? "<null>",
-                HeaderUtilities.CloneHeaders(request.Headers, request.Content?.Headers),
+                HeaderUtilities.GetLoggableHeaders(request.Headers, request.Content?.Headers),
                 request.Content?.ReadContent());
         }
 
@@ -222,7 +222,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 request.RequestUri?.ToString() ?? "<null>",
                 request.Version.ToString(),
                 request.Content?.GetType().FullName ?? "<null>",
-                HeaderUtilities.CloneHeaders(request.Headers, request.Content?.Headers),
+                HeaderUtilities.GetLoggableHeaders(request.Headers, request.Content?.Headers),
                 request.Content?.ReadContent());
         }
     }
