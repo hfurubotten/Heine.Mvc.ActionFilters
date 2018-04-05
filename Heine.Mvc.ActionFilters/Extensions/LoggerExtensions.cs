@@ -49,14 +49,14 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 request.Version.ToString(),
                 request.Content?.GetType().FullName ?? "<null>",
                 HeaderUtilities.GetLoggableHeaders(request.Headers, request.Content?.Headers),
-                request.Content?.ReadContent(), 
+                request.Content?.ReadAsObject(), 
 
                 (int)response.StatusCode,
                 response.ReasonPhrase,
                 response.Version.ToString(),
                 response.Content?.GetType().FullName,
                 HeaderUtilities.GetLoggableHeaders(response.Headers, response.Content?.Headers),
-                response.Content.ReadContent());
+                response.Content.ReadAsObject());
         }
 
         public static void Log(this ILogger logger, LogLevel logLevel, Exception ex, HttpRequestMessage request, HttpResponseMessage response, string message = "")
@@ -84,14 +84,14 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 request.Version.ToString(),
                 request.Content?.GetType().FullName ?? "<null>",
                 HeaderUtilities.GetLoggableHeaders(request.Headers, request.Content?.Headers),
-                request.Content?.ReadContent(), 
+                request.Content?.ReadAsObject(), 
 
                 (int)response.StatusCode,
                 response.ReasonPhrase,
                 response.Version.ToString(),
                 response.Content?.GetType().FullName,
                 HeaderUtilities.GetLoggableHeaders(response.Headers, response.Content?.Headers),
-                response.Content.ReadContent());
+                response.Content.ReadAsObject());
         }
     }
 
@@ -133,7 +133,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 response.Version.ToString(),
                 response.Content?.GetType().FullName,
                 HeaderUtilities.GetLoggableHeaders(response.Headers, response.Content?.Headers),
-                response.Content.ReadContent());
+                response.Content.ReadAsObject());
         }
 
         public static void Log(this ILogger logger, LogLevel logLevel, Exception ex, HttpResponseMessage response, string message = "")
@@ -152,7 +152,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 response.Version.ToString(),
                 response.Content?.GetType().FullName,
                 HeaderUtilities.GetLoggableHeaders(response.Headers, response.Content?.Headers),
-                response.Content.ReadContent());
+                response.Content.ReadAsObject());
         }
     }
 
@@ -204,7 +204,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 request.Version.ToString(),
                 request.Content?.GetType().FullName ?? "<null>",
                 HeaderUtilities.GetLoggableHeaders(request.Headers, request.Content?.Headers),
-                request.Content?.ReadContent());
+                request.Content?.ReadAsObject());
         }
 
         public static void Log(this ILogger logger, LogLevel logLevel, Exception ex, HttpRequestMessage request, string message = "")
@@ -223,7 +223,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 request.Version.ToString(),
                 request.Content?.GetType().FullName ?? "<null>",
                 HeaderUtilities.GetLoggableHeaders(request.Headers, request.Content?.Headers),
-                request.Content?.ReadContent());
+                request.Content?.ReadAsObject());
         }
     }
 }

@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Xml.Linq;
 using Newtonsoft.Json.Linq;
 
@@ -10,6 +9,21 @@ namespace Heine.Mvc.ActionFilters.Extensions
 {
     public static class HttpContentExtensions
     {
+        public static HttpContent Clone(this HttpContent content)
+        {
+            if (content == null) return null;
+
+            var ms = new MemoryStream();
+            content.CopyToAsync(ms).Wait();
+            ms.Position = 0;
+
+            var clone = new StreamContent(ms);
+            foreach (var header in content.Headers)
+            {
+                clone.Headers.Add(header.Key, header.Value);
+            }
+            return clone;
+        }
 
         public static string ReadAsString(this HttpContent httpContent)
         {
@@ -19,11 +33,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
 
             try
             {
-                var contentStream = httpContent.ReadAsStreamAsync().ConfigureAwait(false).GetAwaiter().GetResult();
-                contentStream.Position = 0;
-                var streamReader = new StreamReader(contentStream, Encoding.UTF8);
-                content = streamReader.ReadToEnd();
-                contentStream.Position = 0;
+                content = httpContent.Clone().ReadAsStringAsync().ConfigureAwait(false).GetAwaiter().GetResult();
             }
             catch (NotSupportedException e)
             {
@@ -33,7 +43,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
             return content;
         }
 
-        internal static object ReadContent(this HttpContent httpContent)
+        public static object ReadAsObject(this HttpContent httpContent)
         {
             var body = httpContent?.ReadAsString();
 

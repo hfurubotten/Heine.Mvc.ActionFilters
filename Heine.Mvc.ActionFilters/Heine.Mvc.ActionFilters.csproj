@@ -72,6 +72,7 @@
     <Compile Include="Extensions\HttpContentExtensions.cs" />
     <Compile Include="Exceptions\HttpStatusException.cs" />
     <Compile Include="Extensions\LoggerExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Interfaces\IAuditable.cs" />
     <Compile Include="ActionFilterAttributes\LogAllTrafficAttribute.cs" />
     <Compile Include="ActionFilterAttributes\LogClientErrorsAttribute.cs" />
