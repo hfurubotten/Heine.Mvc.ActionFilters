@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Xml.Linq;
@@ -12,16 +11,17 @@ namespace Heine.Mvc.ActionFilters.Extensions
         public static HttpContent Clone(this HttpContent content)
         {
             if (content == null) return null;
+            
+            var stream = content.ReadAsStreamAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+            stream.Position = 0;
 
-            var ms = new MemoryStream();
-            content.CopyToAsync(ms).Wait();
-            ms.Position = 0;
+            var clone = new StreamContent(stream);
 
-            var clone = new StreamContent(ms);
             foreach (var header in content.Headers)
             {
                 clone.Headers.Add(header.Key, header.Value);
             }
+
             return clone;
         }
 
