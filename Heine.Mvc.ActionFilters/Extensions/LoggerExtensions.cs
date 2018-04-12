@@ -45,11 +45,11 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 "Body: \n{HttpResponseBody}", 
 
                 request.Method,
-                request.RequestUri?.ToString() ?? "<null>",
+                request.RequestUri?.ToString(),
                 request.Version.ToString(),
-                request.Content?.GetType().FullName ?? "<null>",
+                request.Content?.GetType().FullName,
                 HeaderUtilities.GetLoggableHeaders(request.Headers, request.Content?.Headers),
-                request.Content?.ReadAsObject(), 
+                request.Content.ReadAsObject(), 
 
                 (int)response.StatusCode,
                 response.ReasonPhrase,
@@ -80,11 +80,11 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 "Body: \n{HttpResponseBody}", 
 
                 request.Method,
-                request.RequestUri?.ToString() ?? "<null>",
+                request.RequestUri?.ToString(),
                 request.Version.ToString(),
-                request.Content?.GetType().FullName ?? "<null>",
+                request.Content?.GetType().FullName,
                 HeaderUtilities.GetLoggableHeaders(request.Headers, request.Content?.Headers),
-                request.Content?.ReadAsObject(), 
+                request.Content.ReadAsObject(), 
 
                 (int)response.StatusCode,
                 response.ReasonPhrase,
@@ -200,11 +200,11 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 "Headers: {HttpRequestHeaders} \n\n" +
                 "Body: \n{HttpRequestBody}", 
                 request.Method,
-                request.RequestUri?.ToString() ?? "<null>",
+                request.RequestUri?.ToString(),
                 request.Version.ToString(),
-                request.Content?.GetType().FullName ?? "<null>",
+                request.Content?.GetType().FullName,
                 HeaderUtilities.GetLoggableHeaders(request.Headers, request.Content?.Headers),
-                request.Content?.ReadAsObject());
+                request.Content.ReadAsObject());
         }
 
         public static void Log(this ILogger logger, LogLevel logLevel, Exception ex, HttpRequestMessage request, string message = "")
@@ -219,11 +219,11 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 "Headers: {HttpRequestHeaders} \n\n" +
                 "Body: \n{HttpRequestBody}", 
                 request.Method,
-                request.RequestUri?.ToString() ?? "<null>",
+                request.RequestUri?.ToString(),
                 request.Version.ToString(),
-                request.Content?.GetType().FullName ?? "<null>",
+                request.Content?.GetType().FullName,
                 HeaderUtilities.GetLoggableHeaders(request.Headers, request.Content?.Headers),
-                request.Content?.ReadAsObject());
+                request.Content.ReadAsObject());
         }
     }
 }

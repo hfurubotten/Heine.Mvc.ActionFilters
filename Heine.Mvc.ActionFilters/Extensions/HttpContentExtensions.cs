@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Net.Http;
 using System.Xml.Linq;
-using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace Heine.Mvc.ActionFilters.Extensions
 {
@@ -50,7 +50,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
             switch (httpContent?.Headers?.ContentType?.MediaType)
             {
                 case "application/json":
-                    try { return JToken.Parse(body); }
+                    try { return JsonConvert.DeserializeObject(body); }
                     catch { return body; }
                 case "application/xml":
                     try { return XDocument.Parse(body); }
