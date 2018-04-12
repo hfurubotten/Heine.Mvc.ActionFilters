@@ -1,1 +1,1 @@
-nuget pack -basepath nuget Heine.Mvc.ActionFilters.nuspec
+nuget pack Heine.Mvc.ActionFilters.nuspec -symbols

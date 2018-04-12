@@ -105,3 +105,16 @@ However, if the property is nullable and set to null, validation will succeed. T
 
 ## Dependencies
 The package depends on [NLog](http://nlog-project.org/) to handle the logging. That means that you need to have a file named `NLog.config` inside your project (or a project you are referencing) that configures target, paramaters, minimum log level etc.
+
+## Contributing
+
+### Publishing new nuget package version
+
+To pack and push the nuget package to nuget.org first update the projects version in `Properties/AssemblyInfo.cs` and then update the version number in the `nuspec` file.
+
+Execute the `nuget_pack.bat` file to create the `nupkg` files.
+
+Update the `nuget_push.bat` file with the new version number, and afterwards execute it to push the package to nuget.org
+
+> One need to create an API key at nuget.org with permissions to push new versions of the package to be able to push the package to nuget.org  
+> execute the command `nuget setApikey <personal_api_key>` to set the default api key for nuget.org and it's symbol source server.
