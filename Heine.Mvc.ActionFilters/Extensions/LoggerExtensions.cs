@@ -34,7 +34,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 "Version: {HttpRequestVersion}, \n" +
                 "Content Class Name: {HttpRequestContentClassName}, \n" +
                 "Headers: {HttpRequestHeaders} \n\n" +
-                "Body: \n{HttpRequestBody} \n" +
+                "Body: \n{@HttpRequestBody} \n" +
                 "\n\n" +
                 "Response: \n" +
                 "HttpStatusCode: {HttpStatusCode} \n" +
@@ -42,7 +42,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 "Http version: {HttpResponseVersion} \n" +
                 "Content Class Name: {HttpResponseContentClassName} \n" +
                 "Headers: {HttpResponseHeaders} \n\n" +
-                "Body: \n{HttpResponseBody}", 
+                "Body: \n{@HttpResponseBody}", 
 
                 request.Method,
                 request.RequestUri?.ToString(),
@@ -69,7 +69,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 "Version: {HttpRequestVersion}, \n" +
                 "Content Class Name: {HttpRequestContentClassName}, \n" +
                 "Headers: {HttpRequestHeaders} \n\n" +
-                "Body: \n{HttpRequestBody} \n" +
+                "Body: \n{@HttpRequestBody} \n" +
                 "\n\n" +
                 "Response: \n" +
                 "HttpStatusCode: {HttpStatusCode} \n" +
@@ -77,7 +77,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 "Http version: {HttpResponseVersion} \n" +
                 "Content Class Name: {HttpResponseContentClassName} \n" +
                 "Headers: {HttpResponseHeaders} \n\n" +
-                "Body: \n{HttpResponseBody}", 
+                "Body: \n{@HttpResponseBody}", 
 
                 request.Method,
                 request.RequestUri?.ToString(),
@@ -127,7 +127,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 "Http version: {HttpResponseVersion} \n" +
                 "Content Class Name: {HttpResponseContentClassName} \n" +
                 "Headers: {HttpResponseHeaders} \n\n" +
-                "Body: \n{HttpResponseBody}", 
+                "Body: \n{@HttpResponseBody}", 
                 (int)response.StatusCode,
                 response.ReasonPhrase,
                 response.Version.ToString(),
@@ -146,7 +146,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 "Http version: {HttpResponseVersion} \n" +
                 "Content Class Name: {HttpResponseContentClassName} \n" +
                 "Headers: {HttpResponseHeaders} \n\n" +
-                "Body: \n{HttpResponseBody}", 
+                "Body: \n{@HttpResponseBody}", 
                 (int)response.StatusCode,
                 response.ReasonPhrase,
                 response.Version.ToString(),
@@ -198,7 +198,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 "Version: {HttpRequestVersion}, \n" +
                 "Content Class Name: {HttpRequestContentClassName}, \n" +
                 "Headers: {HttpRequestHeaders} \n\n" +
-                "Body: \n{HttpRequestBody}", 
+                "Body: \n{@HttpRequestBody}", 
                 request.Method,
                 request.RequestUri?.ToString(),
                 request.Version.ToString(),
@@ -217,7 +217,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 "Version: {HttpRequestVersion}, \n" +
                 "Content Class Name: {HttpRequestContentClassName}, \n" +
                 "Headers: {HttpRequestHeaders} \n\n" +
-                "Body: \n{HttpRequestBody}", 
+                "Body: \n{@HttpRequestBody}", 
                 request.Method,
                 request.RequestUri?.ToString(),
                 request.Version.ToString(),
