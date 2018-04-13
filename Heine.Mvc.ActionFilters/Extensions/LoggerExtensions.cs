@@ -34,30 +34,30 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 "RequestUri: {RequestUri}, \n" +
                 "Version: {HttpRequestVersion}, \n" +
                 "Content Class Name: {HttpRequestContentClassName}, \n" +
-                "Headers: {HttpRequestHeaders} \n\n" +
-                "Body: \n{@HttpRequestBody} \n" +
+                "Headers: {@HttpRequestHeaders} \n\n" +
+                "Body: \n{HttpRequestBody} \n" +
                 "\n\n" +
                 "Response: \n" +
                 "HttpStatusCode: {HttpStatusCode} \n" +
                 "Status Reason: {HttpStatusReason} \n" +
                 "Http version: {HttpResponseVersion} \n" +
                 "Content Class Name: {HttpResponseContentClassName} \n" +
-                "Headers: {HttpResponseHeaders} \n\n" +
-                "Body: \n{@HttpResponseBody}", 
+                "Headers: {@HttpResponseHeaders} \n\n" +
+                "Body: \n{HttpResponseBody}", 
 
-                request.Method,
+                request.Method.Method,
                 request.RequestUri?.ToString(),
                 request.Version.ToString(),
                 request.Content?.GetType().FullName,
                 HeaderUtilities.GetLoggableHeaders(request.Headers, request.Content?.Headers),
-                request.Content.ReadAsObject(), 
+                request.Content.ReadAsString(), 
 
                 (int)response.StatusCode,
                 response.ReasonPhrase,
                 response.Version.ToString(),
                 response.Content?.GetType().FullName,
                 HeaderUtilities.GetLoggableHeaders(response.Headers, response.Content?.Headers),
-                response.Content.ReadAsObject());
+                response.Content.ReadAsString());
         }
 
         public static void Log(this ILogger logger, LogLevel logLevel, Exception ex, HttpRequestMessage request, HttpResponseMessage response, string message = "")
@@ -70,30 +70,30 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 "RequestUri: {RequestUri}, \n" +
                 "Version: {HttpRequestVersion}, \n" +
                 "Content Class Name: {HttpRequestContentClassName}, \n" +
-                "Headers: {HttpRequestHeaders} \n\n" +
-                "Body: \n{@HttpRequestBody} \n" +
+                "Headers: {@HttpRequestHeaders} \n\n" +
+                "Body: \n{HttpRequestBody} \n" +
                 "\n\n" +
                 "Response: \n" +
                 "HttpStatusCode: {HttpStatusCode} \n" +
                 "Status Reason: {HttpStatusReason} \n" +
                 "Http version: {HttpResponseVersion} \n" +
                 "Content Class Name: {HttpResponseContentClassName} \n" +
-                "Headers: {HttpResponseHeaders} \n\n" +
-                "Body: \n{@HttpResponseBody}", 
+                "Headers: {@HttpResponseHeaders} \n\n" +
+                "Body: \n{HttpResponseBody}", 
 
-                request.Method,
+                request.Method.Method,
                 request.RequestUri?.ToString(),
                 request.Version.ToString(),
                 request.Content?.GetType().FullName,
                 HeaderUtilities.GetLoggableHeaders(request.Headers, request.Content?.Headers),
-                request.Content.ReadAsObject(), 
+                request.Content.ReadAsString(), 
 
                 (int)response.StatusCode,
                 response.ReasonPhrase,
                 response.Version.ToString(),
                 response.Content?.GetType().FullName,
                 HeaderUtilities.GetLoggableHeaders(response.Headers, response.Content?.Headers),
-                response.Content.ReadAsObject());
+                response.Content.ReadAsString());
         }
     }
 
@@ -129,14 +129,14 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 "Status Reason: {HttpStatusReason} \n" +
                 "Http version: {HttpResponseVersion} \n" +
                 "Content Class Name: {HttpResponseContentClassName} \n" +
-                "Headers: {HttpResponseHeaders} \n\n" +
-                "Body: \n{@HttpResponseBody}", 
+                "Headers: {@HttpResponseHeaders} \n\n" +
+                "Body: \n{HttpResponseBody}", 
                 (int)response.StatusCode,
                 response.ReasonPhrase,
                 response.Version.ToString(),
                 response.Content?.GetType().FullName,
                 HeaderUtilities.GetLoggableHeaders(response.Headers, response.Content?.Headers),
-                response.Content.ReadAsObject());
+                response.Content.ReadAsString());
         }
 
         public static void Log(this ILogger logger, LogLevel logLevel, Exception ex, HttpResponseMessage response, string message = "")
@@ -149,14 +149,14 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 "Status Reason: {HttpStatusReason} \n" +
                 "Http version: {HttpResponseVersion} \n" +
                 "Content Class Name: {HttpResponseContentClassName} \n" +
-                "Headers: {HttpResponseHeaders} \n\n" +
-                "Body: \n{@HttpResponseBody}", 
+                "Headers: {@HttpResponseHeaders} \n\n" +
+                "Body: \n{HttpResponseBody}", 
                 (int)response.StatusCode,
                 response.ReasonPhrase,
                 response.Version.ToString(),
                 response.Content?.GetType().FullName,
                 HeaderUtilities.GetLoggableHeaders(response.Headers, response.Content?.Headers),
-                response.Content.ReadAsObject());
+                response.Content.ReadAsString());
         }
     }
 
@@ -202,14 +202,14 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 "RequestUri: {RequestUri}, \n" +
                 "Version: {HttpRequestVersion}, \n" +
                 "Content Class Name: {HttpRequestContentClassName}, \n" +
-                "Headers: {HttpRequestHeaders} \n\n" +
-                "Body: \n{@HttpRequestBody}", 
-                request.Method,
+                "Headers: {@HttpRequestHeaders} \n\n" +
+                "Body: \n{HttpRequestBody}", 
+                request.Method.Method,
                 request.RequestUri?.ToString(),
                 request.Version.ToString(),
                 request.Content?.GetType().FullName,
                 HeaderUtilities.GetLoggableHeaders(request.Headers, request.Content?.Headers),
-                request.Content.ReadAsObject());
+                request.Content.ReadAsString());
         }
 
         public static void Log(this ILogger logger, LogLevel logLevel, Exception ex, HttpRequestMessage request, string message = "")
@@ -222,14 +222,14 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 "RequestUri: {RequestUri}, \n" +
                 "Version: {HttpRequestVersion}, \n" +
                 "Content Class Name: {HttpRequestContentClassName}, \n" +
-                "Headers: {HttpRequestHeaders} \n\n" +
-                "Body: \n{@HttpRequestBody}", 
-                request.Method,
+                "Headers: {@HttpRequestHeaders} \n\n" +
+                "Body: \n{HttpRequestBody}", 
+                request.Method.Method,
                 request.RequestUri?.ToString(),
                 request.Version.ToString(),
                 request.Content?.GetType().FullName,
                 HeaderUtilities.GetLoggableHeaders(request.Headers, request.Content?.Headers),
-                request.Content.ReadAsObject());
+                request.Content.ReadAsString());
         }
     }
 }

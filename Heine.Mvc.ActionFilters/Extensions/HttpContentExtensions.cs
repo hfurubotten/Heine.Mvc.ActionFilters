@@ -3,12 +3,13 @@ using System.Linq;
 using System.Net.Http;
 using System.Xml.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Heine.Mvc.ActionFilters.Extensions
 {
     public static class HttpContentExtensions
     {
-        public static string ReadAsString(this HttpContent httpContent)
+        public static string ReadAsString(this HttpContent httpContent, bool format = true)
         {
             if (httpContent == null) return string.Empty;
 
@@ -17,32 +18,26 @@ namespace Heine.Mvc.ActionFilters.Extensions
             try
             {
                 content = httpContent.ReadAsStringAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+
+                if (format)
+                {
+                    switch (httpContent.Headers?.ContentType?.MediaType)
+                    {
+                        case "application/json":
+                            try { return JToken.Parse(content).ToString(Formatting.Indented); }
+                            catch { return content; }
+                        case "application/xml":
+                            try { return XDocument.Parse(content).ToString(); }
+                            catch { return content; }
+                    }
+                }
             }
-            catch (NotSupportedException e)
+            catch (Exception ex)
             {
-                content = $"Unable to read body of HTTP content:\n{string.Join("\n", e.GetMessages().Select(message => $"- '{message}'"))}";
+                content = $"Unable to read body of HTTP content:\n{string.Join("\n", ex.GetMessages().Select(message => $"- '{message}'"))}";
             }
 
             return content;
-        }
-
-        public static object ReadAsObject(this HttpContent httpContent)
-        {
-            if (httpContent == null) return null;
-
-            var body = httpContent.ReadAsString();
-
-            switch (httpContent.Headers?.ContentType?.MediaType)
-            {
-                case "application/json":
-                    try { return JsonConvert.DeserializeObject(body); }
-                    catch { return body; }
-                case "application/xml":
-                    try { return XDocument.Parse(body); }
-                    catch { return body; }
-            }
-
-            return body;
         }
     }
 }
