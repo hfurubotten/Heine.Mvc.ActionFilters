@@ -28,7 +28,8 @@ namespace Heine.Mvc.ActionFilters.Extensions
         {
             if (!logger.IsEnabled(logLevel)) return;
 
-            logger.Log(logLevel, message + "Request: \n" +
+            logger.Log(logLevel, message + 
+                "Request: \n" +
                 "Method: {HttpMethod}, \n" +
                 "RequestUri: {RequestUri}, \n" +
                 "Version: {HttpRequestVersion}, \n" +
@@ -63,7 +64,8 @@ namespace Heine.Mvc.ActionFilters.Extensions
         {
             if (!logger.IsEnabled(logLevel)) return;
 
-            logger.Log(logLevel, ex, message + "Request: \n" +
+            logger.Log(logLevel, ex, message + 
+                "Request: \n" +
                 "Method: {HttpMethod}, \n" +
                 "RequestUri: {RequestUri}, \n" +
                 "Version: {HttpRequestVersion}, \n" +
@@ -121,7 +123,8 @@ namespace Heine.Mvc.ActionFilters.Extensions
         {
             if (!logger.IsEnabled(logLevel)) return;
 
-            logger.Log(logLevel, message + "Response: \n" +
+            logger.Log(logLevel, message + 
+                "Response: \n" +
                 "HttpStatusCode: {HttpStatusCode} \n" +
                 "Status Reason: {HttpStatusReason} \n" +
                 "Http version: {HttpResponseVersion} \n" +
@@ -140,7 +143,8 @@ namespace Heine.Mvc.ActionFilters.Extensions
         {
             if (!logger.IsEnabled(logLevel)) return;
 
-            logger.Log(logLevel, ex, message + "Response: \n" +
+            logger.Log(logLevel, ex, message + 
+                "Response: \n" +
                 "HttpStatusCode: {HttpStatusCode} \n" +
                 "Status Reason: {HttpStatusReason} \n" +
                 "Http version: {HttpResponseVersion} \n" +
@@ -192,7 +196,8 @@ namespace Heine.Mvc.ActionFilters.Extensions
         {
             if (!logger.IsEnabled(logLevel)) return;
 
-            logger.Log(logLevel, message + "Request: \n" +
+            logger.Log(logLevel, message + 
+                "Request: \n" +
                 "Method: {HttpMethod}, \n" +
                 "RequestUri: {RequestUri}, \n" +
                 "Version: {HttpRequestVersion}, \n" +
@@ -211,7 +216,8 @@ namespace Heine.Mvc.ActionFilters.Extensions
         {
             if (!logger.IsEnabled(logLevel)) return;
 
-            logger.Log(logLevel, ex, message + "Request: \n" +
+            logger.Log(logLevel, ex, message + 
+                "Request: \n" +
                 "Method: {HttpMethod}, \n" +
                 "RequestUri: {RequestUri}, \n" +
                 "Version: {HttpRequestVersion}, \n" +

@@ -90,9 +90,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="ApplyVersionToAssemblies.ps1" />
+    <None Include="ApplyVersionToNuspec.ps1" />
     <None Include="Heine.Mvc.ActionFilters.nuspec" />
-    <None Include="nuget_pack.bat" />
-    <None Include="nuget_push.bat" />
+    <None Include="nuget_build_pack_push.bat" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

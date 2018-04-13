@@ -110,11 +110,8 @@ The package depends on [NLog](http://nlog-project.org/) to handle the logging. T
 
 ### Publishing new nuget package version
 
-To pack and push the nuget package to nuget.org first update the projects version in `Properties/AssemblyInfo.cs` and then update the version number in the `nuspec` file.
+To be able to push the nuget package to nuget.org you need to set your apikey
 
-Execute the `nuget_pack.bat` file to create the `nupkg` files.
+`nuget setApiKey <personal_api_key>`
 
-Update the `nuget_push.bat` file with the new version number, and afterwards execute it to push the package to nuget.org
-
-> One need to create an API key at nuget.org with permissions to push new versions of the package to be able to push the package to nuget.org  
-> execute the command `nuget setApikey <personal_api_key>` to set the default api key for nuget.org and it's symbol source server.
+Update the version number in `nuget_build_pack_push.bat` and run it to build, pack and publish the nuget package.

@@ -1,1 +1,0 @@
-nuget pack Heine.Mvc.ActionFilters.nuspec -symbols

@@ -8,23 +8,6 @@ namespace Heine.Mvc.ActionFilters.Extensions
 {
     public static class HttpContentExtensions
     {
-        public static HttpContent Clone(this HttpContent content)
-        {
-            if (content == null) return null;
-            
-            var stream = content.ReadAsStreamAsync().ConfigureAwait(false).GetAwaiter().GetResult();
-            stream.Position = 0;
-
-            var clone = new StreamContent(stream);
-
-            foreach (var header in content.Headers)
-            {
-                clone.Headers.Add(header.Key, header.Value);
-            }
-
-            return clone;
-        }
-
         public static string ReadAsString(this HttpContent httpContent)
         {
             if (httpContent == null) return string.Empty;
@@ -33,7 +16,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
 
             try
             {
-                content = httpContent.Clone().ReadAsStringAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+                content = httpContent.ReadAsStringAsync().ConfigureAwait(false).GetAwaiter().GetResult();
             }
             catch (NotSupportedException e)
             {
@@ -45,9 +28,11 @@ namespace Heine.Mvc.ActionFilters.Extensions
 
         public static object ReadAsObject(this HttpContent httpContent)
         {
-            var body = httpContent?.ReadAsString();
+            if (httpContent == null) return null;
 
-            switch (httpContent?.Headers?.ContentType?.MediaType)
+            var body = httpContent.ReadAsString();
+
+            switch (httpContent.Headers?.ContentType?.MediaType)
             {
                 case "application/json":
                     try { return JsonConvert.DeserializeObject(body); }
