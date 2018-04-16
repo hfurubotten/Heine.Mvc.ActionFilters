@@ -16,7 +16,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
                     if (string.IsNullOrWhiteSpace(headerValue)) return headerValue;
                     if (!headerValue.Contains(' ')) return headerValue.ReplaceEnd('*', 2f / 3f);
                     var headerValueParts = headerValue.Split(new[] { ' ' }, 2);
-                    return $"{headerValueParts.First()} {new string('*', headerValueParts.Last().Length)}";
+                    return $"{headerValueParts.First()} {new string('*', headerValueParts.Last().Length < 10 ? headerValueParts.Last().Length : 10)}{(headerValueParts.Last().Length > 10 ? "..." : string.Empty)}";
                 }
             }
         };
