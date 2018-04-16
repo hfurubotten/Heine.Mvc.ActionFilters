@@ -1,1 +1,0 @@
-nuget pack -basepath nuget Heine.Mvc.ActionFilters.nuspec

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Xml.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -13,61 +11,42 @@ namespace Heine.Mvc.ActionFilters.Extensions
     {
         public static string ReadAsString(this HttpContent httpContent)
         {
-            if (httpContent == null) return string.Empty;
-
-            string content;
-
             try
             {
-                var contentStream = httpContent.ReadAsStreamAsync().ConfigureAwait(false).GetAwaiter().GetResult();
-                contentStream.Position = 0;
-                var streamReader = new StreamReader(contentStream, Encoding.UTF8);
-                content = streamReader.ReadToEnd();
-                contentStream.Position = 0;
+                if (httpContent == null) return string.Empty;
+
+                var stream = httpContent.ReadAsStreamAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+                stream.Position = 0;
+
+                // The stream returned by `ReadAsStreamAsync()` is the same stream used by `ReadAsStringAsync()`, 
+                // requiring us to reset the stream position before reading it in case it has already been consumed.
+
+                var content = httpContent.ReadAsStringAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+
+                // Resetting the stream again, just in case other consumers of the stream doesn't reset the stream position before trying read it.
+                stream.Position = 0;
+
+                return Format(content);
             }
-            catch (NotSupportedException e)
+            catch (Exception ex)
             {
-                content = $"Unable to read body of HTTP content:\n{string.Join("\n", e.GetMessages().Select(message => $"- '{message}'"))}";
+                return $"Unable to read body of HTTP content:\n{string.Join("\n", ex.GetMessages().Select(message => $"- '{message}'"))}";
             }
 
-            return content;
-        }
-
-        public static string AsFormattedString(this HttpContent httpContent)
-        {
-            string ReadContent()
+            string Format(string content)
             {
-                var body = httpContent.ReadAsString();
-
                 switch (httpContent.Headers?.ContentType?.MediaType)
                 {
                     case "application/json":
-                        try { body = JToken.Parse(body).ToString(Formatting.Indented).Replace(@"\r\n", "\n"); }
-                        catch { return body; }
-                        break;
+                        try { return JToken.Parse(content).ToString(Formatting.Indented); }
+                        catch { return content; }
                     case "application/xml":
-                        try { body = XDocument.Parse(body).ToString(); }
-                        catch { return body; }
-                        break;
+                        try { return XDocument.Parse(content).ToString(); }
+                        catch { return content; }
+                    default:
+                        return content;
                 }
-
-                return body;
             }
-
-            if (httpContent == null) return string.Empty;
-
-            var stringBuilder = new StringBuilder();
-
-            var content = ReadContent();
-
-            if (!string.IsNullOrWhiteSpace(content))
-            {
-                stringBuilder.AppendLine();
-                stringBuilder.AppendLine("Body:");
-                stringBuilder.AppendLine(content);
-            }
-
-            return stringBuilder.ToString();
         }
     }
 }

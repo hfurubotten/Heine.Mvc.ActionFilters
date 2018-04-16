@@ -23,7 +23,7 @@ namespace Heine.Mvc.ActionFilters.ActionFilterAttributes
 
         public override void OnActionExecuting(HttpActionContext actionContext)
         {
-            if (actionContext.ActionDescriptor.GetCustomAttributes<ObsoleteAttribute>().Any()) Logger.Log(Level, actionContext.Request, null, "Use of obsolete API method.");
+            if (actionContext.ActionDescriptor.GetCustomAttributes<ObsoleteAttribute>().Any()) Logger.Log(Level, actionContext.Request, "Use of obsolete API method.\n");
 
             base.OnActionExecuting(actionContext);
         }

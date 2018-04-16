@@ -1,51 +1,51 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http.Headers;
-using System.Text;
 
 namespace Heine.Mvc.ActionFilters.Extensions
 {
     public static class HeaderUtilities
     {
+        // ReSharper disable once MemberCanBePrivate.Global
         public static ICollection<string> ObfuscatedHeaders { get; set; } = new List<string>
         {
             "Authorization"
         };
 
+        // ReSharper disable once CollectionNeverUpdated.Global
+        // ReSharper disable once MemberCanBePrivate.Global
         public static ICollection<string> ExcludedHeaders { get; set; } = new List<string>();
-
-        internal static string DumpHeaders(params HttpHeaders[] headers)
+        
+        internal static Dictionary<string, string> GetLoggableHeaders(params HttpHeaders[] headersCollections)
         {
-            var stringBuilder = new StringBuilder();
-            stringBuilder.Append("{\r\n");
-            foreach (var header in headers)
+            var clone = new Dictionary<string, string>();
+            foreach (var headers in headersCollections)
             {
-                if (header != null)
+                if (headers == null)
+                    continue;
+
+                foreach (var header in headers)
                 {
-                    foreach (var keyValuePair in header)
+                    if (ExcludedHeaders.Contains(header.Key)) continue;
+
+                    if (ObfuscatedHeaders.Contains(header.Key))
                     {
-                        var headerKey = keyValuePair.Key;
-                        if (ExcludedHeaders.Contains(headerKey)) continue;
+                        var value = header.Value?.FirstOrDefault();
 
-                        foreach (var str in keyValuePair.Value)
-                        {
-                            var headerValue = str;
+                        clone.Add(header.Key, 
+                            string.IsNullOrEmpty(value)
+                                ? string.Empty
+                                : value.Length > 10 
+                                    ? $"{value.Substring(0, 10)}..." 
+                                    : value.ReplaceEnd('.', 2f / 3f));
 
-                            if (ObfuscatedHeaders.Contains(headerKey))
-                            {
-                                headerValue = new string('*', 10);
-                            }
-
-                            stringBuilder.Append("  ");
-                            stringBuilder.Append(headerKey);
-                            stringBuilder.Append(": ");
-                            stringBuilder.Append(headerValue);
-                            stringBuilder.Append("\r\n");
-                        }
+                        continue;
                     }
+
+                    clone.Add(header.Key, string.Join(", ", header.Value));
                 }
             }
-            stringBuilder.Append('}');
-            return stringBuilder.ToString();
+            return clone;
         }
     }
 }
