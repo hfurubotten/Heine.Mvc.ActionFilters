@@ -28,6 +28,11 @@ namespace Heine.Mvc.ActionFilters.Extensions
         {
             if (!logger.IsEnabled(logLevel)) return;
 
+            // ReSharper disable InconsistentNaming
+            var _request = request.Destruct();
+            var _response = response.Destruct();
+            // ReSharper restore InconsistentNaming
+
             logger.Log(logLevel, message + 
                 "Request: \n" +
                 "Method: {HttpMethod}, \n" +
@@ -45,24 +50,29 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 "Headers: {@HttpResponseHeaders} \n\n" +
                 "Body: \n{HttpResponseBody}", 
 
-                request.Method.Method,
-                request.RequestUri?.ToString(),
-                request.Version.ToString(),
-                request.Content?.GetType().FullName,
-                HeaderUtilities.GetLoggableHeaders(request.Headers, request.Content?.Headers),
-                request.Content.ReadAsString(), 
+                _request.method,
+                _request.requestUri,
+                _request.version,
+                _request.contentTypeName,
+                _request.headers,
+                _request.body, 
 
-                (int)response.StatusCode,
-                response.ReasonPhrase,
-                response.Version.ToString(),
-                response.Content?.GetType().FullName,
-                HeaderUtilities.GetLoggableHeaders(response.Headers, response.Content?.Headers),
-                response.Content.ReadAsString());
+                _response.statusCode,
+                _response.reasonPhrase,
+                _response.version,
+                _response.contentTypeName,
+                _response.headers,
+                _response.body);
         }
 
         public static void Log(this ILogger logger, LogLevel logLevel, Exception ex, HttpRequestMessage request, HttpResponseMessage response, string message = "")
         {
             if (!logger.IsEnabled(logLevel)) return;
+
+            // ReSharper disable InconsistentNaming
+            var _request = request.Destruct();
+            var _response = response.Destruct();
+            // ReSharper restore InconsistentNaming
 
             logger.Log(logLevel, ex, message + 
                 "Request: \n" +
@@ -81,19 +91,19 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 "Headers: {@HttpResponseHeaders} \n\n" +
                 "Body: \n{HttpResponseBody}", 
 
-                request.Method.Method,
-                request.RequestUri?.ToString(),
-                request.Version.ToString(),
-                request.Content?.GetType().FullName,
-                HeaderUtilities.GetLoggableHeaders(request.Headers, request.Content?.Headers),
-                request.Content.ReadAsString(), 
+                _request.method,
+                _request.requestUri,
+                _request.version,
+                _request.contentTypeName,
+                _request.headers,
+                _request.body, 
 
-                (int)response.StatusCode,
-                response.ReasonPhrase,
-                response.Version.ToString(),
-                response.Content?.GetType().FullName,
-                HeaderUtilities.GetLoggableHeaders(response.Headers, response.Content?.Headers),
-                response.Content.ReadAsString());
+                _response.statusCode,
+                _response.reasonPhrase,
+                _response.version,
+                _response.contentTypeName,
+                _response.headers,
+                _response.body);
         }
     }
 
@@ -123,6 +133,9 @@ namespace Heine.Mvc.ActionFilters.Extensions
         {
             if (!logger.IsEnabled(logLevel)) return;
 
+            // ReSharper disable once InconsistentNaming
+            var _response = response.Destruct();
+
             logger.Log(logLevel, message + 
                 "Response: \n" +
                 "HttpStatusCode: {HttpStatusCode} \n" +
@@ -131,17 +144,20 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 "Content Class Name: {HttpResponseContentClassName} \n" +
                 "Headers: {@HttpResponseHeaders} \n\n" +
                 "Body: \n{HttpResponseBody}", 
-                (int)response.StatusCode,
-                response.ReasonPhrase,
-                response.Version.ToString(),
-                response.Content?.GetType().FullName,
-                HeaderUtilities.GetLoggableHeaders(response.Headers, response.Content?.Headers),
-                response.Content.ReadAsString());
+                _response.statusCode,
+                _response.reasonPhrase,
+                _response.version,
+                _response.contentTypeName,
+                _response.headers,
+                _response.body);
         }
 
         public static void Log(this ILogger logger, LogLevel logLevel, Exception ex, HttpResponseMessage response, string message = "")
         {
             if (!logger.IsEnabled(logLevel)) return;
+
+            // ReSharper disable once InconsistentNaming
+            var _response = response.Destruct();
 
             logger.Log(logLevel, ex, message + 
                 "Response: \n" +
@@ -151,12 +167,12 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 "Content Class Name: {HttpResponseContentClassName} \n" +
                 "Headers: {@HttpResponseHeaders} \n\n" +
                 "Body: \n{HttpResponseBody}", 
-                (int)response.StatusCode,
-                response.ReasonPhrase,
-                response.Version.ToString(),
-                response.Content?.GetType().FullName,
-                HeaderUtilities.GetLoggableHeaders(response.Headers, response.Content?.Headers),
-                response.Content.ReadAsString());
+                _response.statusCode,
+                _response.reasonPhrase,
+                _response.version,
+                _response.contentTypeName,
+                _response.headers,
+                _response.body);
         }
     }
 
@@ -196,6 +212,9 @@ namespace Heine.Mvc.ActionFilters.Extensions
         {
             if (!logger.IsEnabled(logLevel)) return;
 
+            // ReSharper disable once InconsistentNaming
+            var _request = request.Destruct();
+
             logger.Log(logLevel, message + 
                 "Request: \n" +
                 "Method: {HttpMethod}, \n" +
@@ -204,17 +223,20 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 "Content Class Name: {HttpRequestContentClassName}, \n" +
                 "Headers: {@HttpRequestHeaders} \n\n" +
                 "Body: \n{HttpRequestBody}", 
-                request.Method.Method,
-                request.RequestUri?.ToString(),
-                request.Version.ToString(),
-                request.Content?.GetType().FullName,
-                HeaderUtilities.GetLoggableHeaders(request.Headers, request.Content?.Headers),
-                request.Content.ReadAsString());
+                _request.method,
+                _request.requestUri,
+                _request.version,
+                _request.contentTypeName,
+                _request.headers,
+                _request.body);
         }
 
         public static void Log(this ILogger logger, LogLevel logLevel, Exception ex, HttpRequestMessage request, string message = "")
         {
             if (!logger.IsEnabled(logLevel)) return;
+
+            // ReSharper disable once InconsistentNaming
+            var _request = request.Destruct();
 
             logger.Log(logLevel, ex, message + 
                 "Request: \n" +
@@ -224,12 +246,12 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 "Content Class Name: {HttpRequestContentClassName}, \n" +
                 "Headers: {@HttpRequestHeaders} \n\n" +
                 "Body: \n{HttpRequestBody}", 
-                request.Method.Method,
-                request.RequestUri?.ToString(),
-                request.Version.ToString(),
-                request.Content?.GetType().FullName,
-                HeaderUtilities.GetLoggableHeaders(request.Headers, request.Content?.Headers),
-                request.Content.ReadAsString());
+                _request.method,
+                _request.requestUri,
+                _request.version,
+                _request.contentTypeName,
+                _request.headers,
+                _request.body);
         }
     }
 }
