@@ -14,7 +14,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 "Authorization", headerValue =>
                 {
                     if (string.IsNullOrWhiteSpace(headerValue)) return headerValue;
-                    if (!headerValue.Contains(' ')) return headerValue.ReplaceEnd('*', 2f / 3f);
+                    if (!headerValue.Contains(' ')) return headerValue.Length <= 10 ? headerValue.ReplaceEnd('*', 2f / 3f) : $"{headerValue.Substring(0,10).ReplaceEnd('*', 2f / 3f)}...";
                     var headerValueParts = headerValue.Split(new[] { ' ' }, 2);
                     return $"{headerValueParts.First()} {new string('*', headerValueParts.Last().Length < 10 ? headerValueParts.Last().Length : 10)}{(headerValueParts.Last().Length > 10 ? "..." : string.Empty)}";
                 }
@@ -25,7 +25,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
         // ReSharper disable once MemberCanBePrivate.Global
         public static ICollection<string> ExcludedHeaders { get; set; } = new List<string>();
 
-        internal static Dictionary<string, string> GetLoggableHeaders(params HttpHeaders[] headersCollections)
+        public static Dictionary<string, string> GetLoggableHeaders(params HttpHeaders[] headersCollections)
         {
             var clone = new Dictionary<string, string>();
             foreach (var headers in headersCollections)
