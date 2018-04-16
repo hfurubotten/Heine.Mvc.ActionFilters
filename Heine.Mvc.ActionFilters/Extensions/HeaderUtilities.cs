@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
 
@@ -7,15 +8,23 @@ namespace Heine.Mvc.ActionFilters.Extensions
     public static class HeaderUtilities
     {
         // ReSharper disable once MemberCanBePrivate.Global
-        public static ICollection<string> ObfuscatedHeaders { get; set; } = new List<string>
+        public static IDictionary<string, Func<string, string>> ObfuscatedHeaders { get; set; } = new Dictionary<string, Func<string, string>>
         {
-            "Authorization"
+            {
+                "Authorization", headerValue =>
+                {
+                    if (string.IsNullOrWhiteSpace(headerValue)) return headerValue;
+                    if (!headerValue.Contains(' ')) return headerValue.ReplaceEnd('*', 2f / 3f);
+                    var headerValueParts = headerValue.Split(new[] { ' ' }, 2);
+                    return $"{headerValueParts.First()} {new string('*', headerValueParts.Last().Length)}";
+                }
+            }
         };
 
         // ReSharper disable once CollectionNeverUpdated.Global
         // ReSharper disable once MemberCanBePrivate.Global
         public static ICollection<string> ExcludedHeaders { get; set; } = new List<string>();
-        
+
         internal static Dictionary<string, string> GetLoggableHeaders(params HttpHeaders[] headersCollections)
         {
             var clone = new Dictionary<string, string>();
@@ -28,23 +37,16 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 {
                     if (ExcludedHeaders.Contains(header.Key)) continue;
 
-                    if (ObfuscatedHeaders.Contains(header.Key))
+                    if (ObfuscatedHeaders.ContainsKey(header.Key))
                     {
-                        var value = header.Value?.FirstOrDefault();
-
-                        clone.Add(header.Key, 
-                            string.IsNullOrEmpty(value)
-                                ? string.Empty
-                                : value.Length > 10 
-                                    ? $"{value.Substring(0, 10)}..." 
-                                    : value.ReplaceEnd('.', 2f / 3f));
-
+                        clone.Add(header.Key, ObfuscatedHeaders[header.Key](header.Value?.FirstOrDefault()));
                         continue;
                     }
 
                     clone.Add(header.Key, string.Join(", ", header.Value));
                 }
             }
+
             return clone;
         }
     }

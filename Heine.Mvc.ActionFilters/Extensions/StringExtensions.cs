@@ -8,7 +8,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
         {
             if (string.IsNullOrWhiteSpace(source)) return source;
             if (source.Length == 1) return new string(c, 1);
-            if (fraction <= 0 || fraction > 1) throw new ArgumentException();
+            if (fraction <= 0 || fraction > 1) throw new ArgumentException("The value must be greater than zero (0) and less or equal to one (1).", nameof(fraction));
 
             var lowFraction = source.Length * (1 - fraction);
             var highFraction = source.Length * fraction;
