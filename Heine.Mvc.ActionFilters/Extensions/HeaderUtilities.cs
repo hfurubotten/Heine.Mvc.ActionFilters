@@ -1,51 +1,53 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http.Headers;
-using System.Text;
 
 namespace Heine.Mvc.ActionFilters.Extensions
 {
     public static class HeaderUtilities
     {
-        public static ICollection<string> ObfuscatedHeaders { get; set; } = new List<string>
+        // ReSharper disable once MemberCanBePrivate.Global
+        public static IDictionary<string, Func<string, string>> ObfuscatedHeaders { get; set; } = new Dictionary<string, Func<string, string>>
         {
-            "Authorization"
-        };
-
-        public static ICollection<string> ExcludedHeaders { get; set; } = new List<string>();
-
-        internal static string DumpHeaders(params HttpHeaders[] headers)
-        {
-            var stringBuilder = new StringBuilder();
-            stringBuilder.Append("{\r\n");
-            foreach (var header in headers)
             {
-                if (header != null)
+                nameof(HttpRequestHeaders.Authorization), headerValue =>
                 {
-                    foreach (var keyValuePair in header)
-                    {
-                        var headerKey = keyValuePair.Key;
-                        if (ExcludedHeaders.Contains(headerKey)) continue;
-
-                        foreach (var str in keyValuePair.Value)
-                        {
-                            var headerValue = str;
-
-                            if (ObfuscatedHeaders.Contains(headerKey))
-                            {
-                                headerValue = new string('*', 10);
-                            }
-
-                            stringBuilder.Append("  ");
-                            stringBuilder.Append(headerKey);
-                            stringBuilder.Append(": ");
-                            stringBuilder.Append(headerValue);
-                            stringBuilder.Append("\r\n");
-                        }
-                    }
+                    if (string.IsNullOrWhiteSpace(headerValue)) return headerValue;
+                    if (!headerValue.Contains(' ')) return headerValue.Length <= 10 ? headerValue.ReplaceEnd('*', 2f / 3f) : $"{headerValue.Substring(0,10).ReplaceEnd('*', 2f / 3f)}...";
+                    var headerValueParts = headerValue.Split(new[] { ' ' }, 2);
+                    return $"{headerValueParts.First()} {new string('*', headerValueParts.Last().Length < 10 ? headerValueParts.Last().Length : 10)}{(headerValueParts.Last().Length > 10 ? "..." : string.Empty)}";
                 }
             }
-            stringBuilder.Append('}');
-            return stringBuilder.ToString();
+        };
+
+        // ReSharper disable once CollectionNeverUpdated.Global
+        // ReSharper disable once MemberCanBePrivate.Global
+        public static ICollection<string> ExcludedHeaders { get; set; } = new List<string>();
+
+        public static Dictionary<string, string> GetLoggableHeaders(params HttpHeaders[] headersCollections)
+        {
+            var clone = new Dictionary<string, string>();
+            foreach (var headers in headersCollections)
+            {
+                if (headers == null)
+                    continue;
+
+                foreach (var header in headers)
+                {
+                    if (ExcludedHeaders.Contains(header.Key)) continue;
+
+                    if (ObfuscatedHeaders.ContainsKey(header.Key))
+                    {
+                        clone.Add(header.Key, ObfuscatedHeaders[header.Key](header.Value?.FirstOrDefault()));
+                        continue;
+                    }
+
+                    clone.Add(header.Key, string.Join(", ", header.Value));
+                }
+            }
+
+            return clone;
         }
     }
 }
