@@ -20,5 +20,5 @@ nuget pack %PACKAGE_NAME%.nuspec -symbols
 :: To be able to push the nuget package to nuget.org you need to set your apikey
 :: "nuget setApiKey <personal_api_key>" outputs: "The API Key '<personal_api_key>' was saved for the NuGet gallery (https://www.nuget.org) and the symbol server (https://nuget.smbsrc.net/)."
 
-::nuget push %PACKAGE_NAME%.%PACKAGE_VERSION%.nupkg -Source https://api.nuget.org/v3/index.json
-::nuget push %PACKAGE_NAME%.%PACKAGE_VERSION%.symbols.nupkg -Source https://nuget.smbsrc.net
+nuget push %PACKAGE_NAME%.%PACKAGE_VERSION%.nupkg -Source https://api.nuget.org/v3/index.json
+nuget push %PACKAGE_NAME%.%PACKAGE_VERSION%.symbols.nupkg -Source https://nuget.smbsrc.net
