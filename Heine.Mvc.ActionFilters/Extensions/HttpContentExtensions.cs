@@ -39,7 +39,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 switch (httpContent.Headers?.ContentType?.MediaType)
                 {
                     case "application/json":
-                        try { return Obfuscate(JToken.Parse(content), httpHeaders).ToString(Formatting.Indented); }
+                        try { return Obfuscate(JObject.Parse(content), httpHeaders).ToString(Formatting.Indented); }
                         catch { return content; }
                     case "application/xml":
                         try { return XDocument.Parse(content).ToString(); }
@@ -49,19 +49,20 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 }
             }
 
-            JToken Obfuscate(JToken jToken, HttpHeaders headers)
+            JObject Obfuscate(JObject jObject, HttpHeaders headers)
             {
                 if (headers.TryGetValues("X-Obfuscate", out var values))
                 {
+                    var properties = jObject.Children<JProperty>().ToDictionary(k => k.Name);
                     foreach (var value in values)
                     {
-                        if (jToken[value] is JProperty property)
+                        if (properties.TryGetValue(value, out var jProperty))
                         {
-                            property.Value = "-=OBFUSCATED=-";
+                            jProperty.Value = "*** OBFUSCATED ***";
                         }
                     }
                 }
-                return jToken;
+                return jObject;
             }
         }
     }
