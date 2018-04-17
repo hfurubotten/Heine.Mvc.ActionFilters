@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Xml.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -9,7 +10,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
 {
     public static class HttpContentExtensions
     {
-        public static string ReadAsString(this HttpContent httpContent)
+        public static string ReadAsString(this HttpContent httpContent, HttpHeaders httpHeaders)
         {
             try
             {
@@ -38,7 +39,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 switch (httpContent.Headers?.ContentType?.MediaType)
                 {
                     case "application/json":
-                        try { return JToken.Parse(content).ToString(Formatting.Indented); }
+                        try { return Obfuscate(JToken.Parse(content), httpHeaders).ToString(Formatting.Indented); }
                         catch { return content; }
                     case "application/xml":
                         try { return XDocument.Parse(content).ToString(); }
@@ -46,6 +47,21 @@ namespace Heine.Mvc.ActionFilters.Extensions
                     default:
                         return content;
                 }
+            }
+
+            JToken Obfuscate(JToken jToken, HttpHeaders headers)
+            {
+                if (headers.TryGetValues("X-Obfuscate", out var values))
+                {
+                    foreach (var value in values)
+                    {
+                        if (jToken[value] is JProperty property)
+                        {
+                            property.Value = "-=OBFUSCATED=-";
+                        }
+                    }
+                }
+                return jToken;
             }
         }
     }

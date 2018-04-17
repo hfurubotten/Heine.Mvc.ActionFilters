@@ -11,7 +11,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
         public static IDictionary<string, Func<string, string>> ObfuscatedHeaders { get; set; } = new Dictionary<string, Func<string, string>>
         {
             {
-                "Authorization", headerValue =>
+                nameof(HttpRequestHeaders.Authorization), headerValue =>
                 {
                     if (string.IsNullOrWhiteSpace(headerValue)) return headerValue;
                     if (!headerValue.Contains(' ')) return headerValue.Length <= 10 ? headerValue.ReplaceEnd('*', 2f / 3f) : $"{headerValue.Substring(0,10).ReplaceEnd('*', 2f / 3f)}...";
