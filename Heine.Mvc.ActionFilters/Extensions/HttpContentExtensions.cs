@@ -39,7 +39,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 switch (httpContent.Headers?.ContentType?.MediaType)
                 {
                     case "application/json":
-                        try { return Obfuscate(JObject.Parse(content), httpHeaders).ToString(Formatting.Indented); }
+                        try { return Obfuscate(JToken.Parse(content), httpHeaders).ToString(Formatting.Indented); }
                         catch { return content; }
                     case "application/xml":
                         try { return XDocument.Parse(content).ToString(); }
@@ -49,20 +49,27 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 }
             }
 
-            JObject Obfuscate(JObject jObject, HttpHeaders headers)
+            JToken Obfuscate(JToken jToken, HttpHeaders headers)
             {
-                if (headers.TryGetValues("X-Obfuscate", out var values))
+                if (headers.TryGetValues("X-Obfuscate", out var properties))
                 {
-                    var properties = jObject.Children<JProperty>().ToDictionary(k => k.Name);
-                    foreach (var value in values)
+                    var jPath = jToken is JArray ? (IsArray: true, Path: "$[*]") : (IsArray: false, Path: "$");
+                    foreach (var property in properties)
                     {
-                        if (properties.TryGetValue(value, out var jProperty))
+                        if (jPath.IsArray)
                         {
-                            jProperty.Value = "*** OBFUSCATED ***";
+                            foreach (var item in jToken.SelectTokens($"{jPath.Path}.{property}"))
+                            {
+                                item?.Replace("*** OBFUSCATED ***");
+                            }
+                        }
+                        else
+                        {
+                            jToken.SelectToken($"{jPath.Path}.{property}")?.Replace("*** OBFUSCATED ***");
                         }
                     }
                 }
-                return jObject;
+                return jToken;
             }
         }
     }
