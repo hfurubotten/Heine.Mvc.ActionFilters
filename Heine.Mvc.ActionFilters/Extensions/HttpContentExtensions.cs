@@ -60,12 +60,15 @@ namespace Heine.Mvc.ActionFilters.Extensions
                         {
                             foreach (var item in jToken.SelectTokens($"{jPath.Path}.{property}"))
                             {
-                                item?.Replace("*** OBFUSCATED ***");
+                                if (!item.IsNullOrEmpty())
+                                    item.Replace("*** OBFUSCATED ***");
                             }
                         }
                         else
                         {
-                            jToken.SelectToken($"{jPath.Path}.{property}")?.Replace("*** OBFUSCATED ***");
+                            var token = jToken.SelectToken($"{jPath.Path}.{property}");
+                            if (!token.IsNullOrEmpty())
+                                token.Replace("*** OBFUSCATED ***");
                         }
                     }
                 }

@@ -77,6 +77,7 @@
     <Compile Include="Exceptions\HttpStatusException.cs" />
     <Compile Include="Extensions\HttpRequestMessageExtensions.cs" />
     <Compile Include="Extensions\HttpResponseMessageExtensions.cs" />
+    <Compile Include="Extensions\JsonExtensions.cs" />
     <Compile Include="Extensions\LoggerExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Interfaces\IAuditable.cs" />
