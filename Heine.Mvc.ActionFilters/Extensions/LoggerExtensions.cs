@@ -113,7 +113,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 "Http version: {HttpResponseVersion} \n" +
                 "Content Class Name: {HttpResponseContentClassName} \n" +
                 "Headers: {@HttpResponseHeaders} \n\n" +
-                "Body: \n{HttpResponseBody}", 
+                "Body: \n{HttpResponseBody} \n\n", 
                 "Benchmarking: \n" +
                 "ElapsedTime: {ElapsedTime}", 
 
