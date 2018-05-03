@@ -28,13 +28,14 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Heine.Mvc.ActionFilters.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.5.0\lib\net45\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.4.5.3\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -47,6 +48,9 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Http, Version=5.2.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.4\lib\net45\System.Web.Http.dll</HintPath>
@@ -71,12 +75,17 @@
     <Compile Include="Extensions\HeaderUtilities.cs" />
     <Compile Include="Extensions\HttpContentExtensions.cs" />
     <Compile Include="Exceptions\HttpStatusException.cs" />
+    <Compile Include="Extensions\HttpRequestMessageExtensions.cs" />
+    <Compile Include="Extensions\HttpResponseMessageExtensions.cs" />
+    <Compile Include="Extensions\JsonExtensions.cs" />
     <Compile Include="Extensions\LoggerExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Interfaces\IAuditable.cs" />
     <Compile Include="ActionFilterAttributes\LogAllTrafficAttribute.cs" />
     <Compile Include="ActionFilterAttributes\LogClientErrorsAttribute.cs" />
     <Compile Include="ExceptionFilterAttributes\LogExceptionAttribute.cs" />
+    <Compile Include="Services\IObfuscaterService.cs" />
+    <Compile Include="Services\ObfuscaterService.cs" />
     <Compile Include="ValidationAttributes\GuidNotEmptyAttribute.cs" />
     <Compile Include="Exceptions\NotFoundException.cs" />
     <Compile Include="ExceptionFilterAttributes\ProcessHttpStatusExceptionsAttribute.cs" />
@@ -89,8 +98,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="ApplyVersionToAssemblies.ps1" />
+    <None Include="ApplyVersionToNuspec.ps1" />
     <None Include="Heine.Mvc.ActionFilters.nuspec" />
-    <None Include="nuget_pack.bat" />
+    <None Include="nuget_build_pack_push.bat" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -98,7 +109,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /Y "$(TargetDir)$(TargetFileName)" "$(ProjectDir)nuget\lib\net452\$(TargetFileName)"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

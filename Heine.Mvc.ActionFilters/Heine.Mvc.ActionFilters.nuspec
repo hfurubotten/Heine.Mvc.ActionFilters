@@ -1,21 +1,21 @@
-<?xml version="1.0"?>
-<package >
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
   <metadata>
     <id>Heine.Mvc.ActionFilters</id>
-    <version>3.0.0-beta02</version>
+    <version>3.0.2</version>
     <title>Heine.Mvc.ActionFilters</title>
-    <authors>Heine Furubotten, Stian Sandve, Sander Struijk</authors>
+    <authors>Heine Furubotten,Stian Sandve,Sander Struijk</authors>
     <owners>Heine Furubotten</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <licenseUrl>https://opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/hfurubotten/Heine.Mvc.ActionFilters</projectUrl>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Reusable ActionFilters for Web Api. 
       - Automation of non success status responses, with stop execution. 
       - Request/response validation. 
       - Logging action filters through NLog with structural logging.</description>
     <copyright>Copyright 2016</copyright>
     <dependencies>
-      <dependency id="NLog" version="4.5.0" />
+      <dependency id="NLog" version="4.5.2" />
       <dependency id="Newtonsoft.Json" version="10.0.3" />
       <dependency id="Microsoft.AspNet.WebApi" version="5.2.4" />
       <dependency id="Microsoft.AspNet.WebApi.Client" version="5.2.4" />
@@ -23,4 +23,10 @@
       <dependency id="Microsoft.AspNet.WebApi.WebHost" version="5.2.4" />
     </dependencies>
   </metadata>
+  <files>
+    <file src="bin\release\Heine.Mvc.ActionFilters.dll" target="lib\net452\Heine.Mvc.ActionFilters.dll" />
+    <file src="bin\release\Heine.Mvc.ActionFilters.pdb" target="lib\net452\Heine.Mvc.ActionFilters.pdb" />
+    <file src="bin\release\Heine.Mvc.ActionFilters.xml" target="lib\net452\Heine.Mvc.ActionFilters.xml" />
+    <file src="**\*.cs" target="src" />
+  </files>
 </package>

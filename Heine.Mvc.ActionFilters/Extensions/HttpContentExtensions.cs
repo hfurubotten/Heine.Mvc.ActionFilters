@@ -1,63 +1,79 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Xml.Linq;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Heine.Mvc.ActionFilters.Extensions
 {
     public static class HttpContentExtensions
     {
-        public static HttpContent Clone(this HttpContent content)
+        public static string ReadAsString(this HttpContent httpContent, HttpHeaders httpHeaders)
         {
-            if (content == null) return null;
-
-            var ms = new MemoryStream();
-            content.CopyToAsync(ms).Wait();
-            ms.Position = 0;
-
-            var clone = new StreamContent(ms);
-            foreach (var header in content.Headers)
-            {
-                clone.Headers.Add(header.Key, header.Value);
-            }
-            return clone;
-        }
-
-        public static string ReadAsString(this HttpContent httpContent)
-        {
-            if (httpContent == null) return string.Empty;
-
-            string content;
-
             try
             {
-                content = httpContent.Clone().ReadAsStringAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+                if (httpContent == null) return string.Empty;
+
+                var stream = httpContent.ReadAsStreamAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+                stream.Position = 0;
+
+                // The stream returned by `ReadAsStreamAsync()` is the same stream used by `ReadAsStringAsync()`, 
+                // requiring us to reset the stream position before reading it in case it has already been consumed.
+
+                var content = httpContent.ReadAsStringAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+
+                // Resetting the stream again, just in case other consumers of the stream doesn't reset the stream position before trying read it.
+                stream.Position = 0;
+
+                return Format(content);
             }
-            catch (NotSupportedException e)
+            catch (Exception ex)
             {
-                content = $"Unable to read body of HTTP content:\n{string.Join("\n", e.GetMessages().Select(message => $"- '{message}'"))}";
+                return $"Unable to read body of HTTP content:\n{string.Join("\n", ex.GetMessages().Select(message => $"- '{message}'"))}";
             }
 
-            return content;
-        }
-
-        public static object ReadAsObject(this HttpContent httpContent)
-        {
-            var body = httpContent?.ReadAsString();
-
-            switch (httpContent?.Headers?.ContentType?.MediaType)
+            string Format(string content)
             {
-                case "application/json":
-                    try { return JToken.Parse(body); }
-                    catch { return body; }
-                case "application/xml":
-                    try { return XDocument.Parse(body); }
-                    catch { return body; }
+                switch (httpContent.Headers?.ContentType?.MediaType)
+                {
+                    case "application/json":
+                        try { return Obfuscate(JToken.Parse(content), httpHeaders).ToString(Formatting.Indented); }
+                        catch { return content; }
+                    case "application/xml":
+                        try { return XDocument.Parse(content).ToString(); }
+                        catch { return content; }
+                    default:
+                        return content;
+                }
             }
 
-            return body;
+            JToken Obfuscate(JToken jToken, HttpHeaders headers)
+            {
+                if (headers.TryGetValues("X-Obfuscate", out var properties))
+                {
+                    var jPath = jToken is JArray ? (IsArray: true, Path: "$[*]") : (IsArray: false, Path: "$");
+                    foreach (var property in properties)
+                    {
+                        if (jPath.IsArray)
+                        {
+                            foreach (var item in jToken.SelectTokens($"{jPath.Path}.{property}"))
+                            {
+                                if (!item.IsNullOrEmpty())
+                                    item.Replace("*** OBFUSCATED ***");
+                            }
+                        }
+                        else
+                        {
+                            var token = jToken.SelectToken($"{jPath.Path}.{property}");
+                            if (!token.IsNullOrEmpty())
+                                token.Replace("*** OBFUSCATED ***");
+                        }
+                    }
+                }
+                return jToken;
+            }
         }
     }
 }
