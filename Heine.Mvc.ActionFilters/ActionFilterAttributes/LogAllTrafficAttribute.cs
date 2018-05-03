@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Heine.Mvc.ActionFilters.Extensions;
@@ -21,8 +22,14 @@ namespace Heine.Mvc.ActionFilters.ActionFilterAttributes
 
         public int Order { get; set; }
 
+        public bool NotFoundStatusAsWarning { get; set; } = false;
+
+        private Stopwatch stopwatch;
+
         public override void OnActionExecuting(HttpActionContext actionContext)
         {
+            stopwatch = Stopwatch.StartNew();
+
             HttpRequestLoggerExtensions.Debug(Logger, actionContext.Request); 
 
             base.OnActionExecuting(actionContext);
@@ -37,14 +44,19 @@ namespace Heine.Mvc.ActionFilters.ActionFilterAttributes
                 var response = actionExecutedContext.Response;
 
                 if (response.IsSuccessStatusCode)
-                    Logger.Debug(request, response, "Request + Response\n");
+                    Logger.Debug(stopwatch, request, response, "Request + Response\n");
+
+                else if(!NotFoundStatusAsWarning && response.StatusCode == HttpStatusCode.NotFound)
+                    Logger.Debug(stopwatch, request, response, "Request + Response\n");
 
                 else if (response.StatusCode < HttpStatusCode.InternalServerError)
-                    Logger.Warn(request, response, "Request + Response\n");
+                    Logger.Warn(stopwatch, request, response, "Request + Response\n");
 
                 else
-                    Logger.Error(request, response, "Request + Response\n");
+                    Logger.Error(stopwatch, request, response, "Request + Response\n");
             }
+
+            stopwatch.Reset();
 
             base.OnActionExecuted(actionExecutedContext);
         }
