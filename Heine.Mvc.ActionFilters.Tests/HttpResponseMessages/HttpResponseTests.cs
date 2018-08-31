@@ -1,11 +1,8 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Heine.Mvc.ActionFilters.Extensions;
 using NUnit.Framework;
 
@@ -26,7 +23,7 @@ namespace Heine.Mvc.ActionFilters.Tests.HttpResponseMessages
             };
 
             var httpResponse = mockHttpRequestMessage.CreateResponse(HttpStatusCode.OK);
-            httpResponse.Content = new ByteRangeStreamContent(new MemoryStream(rArray), new RangeHeaderValue(0,0),mediaType);
+            httpResponse.Content = new ByteRangeStreamContent(new MemoryStream(rArray), new RangeHeaderValue(0, 0), mediaType);
 
             // Act
             httpResponse.Destruct();
@@ -35,7 +32,7 @@ namespace Heine.Mvc.ActionFilters.Tests.HttpResponseMessages
             // Assert
             Assert.AreEqual(string.Empty, checkVariable);
         }
-        
+
         [Test]
         public void TestThatStreamIsRemovedFromStreamContentResponse()
         {
@@ -47,10 +44,10 @@ namespace Heine.Mvc.ActionFilters.Tests.HttpResponseMessages
             var response = new HttpResponseMessage
             {
                 RequestMessage = new HttpRequestMessage(),
-                
+
                 Content = new StreamContent(stream)
                 {
-                    Headers = {ContentType = mediaType}
+                    Headers = { ContentType = mediaType }
                 }
             };
 

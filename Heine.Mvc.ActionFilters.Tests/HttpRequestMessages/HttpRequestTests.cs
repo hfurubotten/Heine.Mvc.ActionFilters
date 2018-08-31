@@ -2,8 +2,6 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Heine.Mvc.ActionFilters.Extensions;
 using NUnit.Framework;
 
@@ -15,7 +13,6 @@ namespace Heine.Mvc.ActionFilters.Tests.HttpRequestMessages
         public void TestThatStreamIsRemovedFromRequest()
         {
             // Arrange
-           
             var randomBytesArray = Encoding.ASCII.GetBytes("ASAWERKFEOFdarqfaowpJAWHEAW#¤!!¤&");
             var mediaType = new MediaTypeHeaderValue("application/pdf");
 
