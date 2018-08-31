@@ -99,6 +99,8 @@
     <Compile Include="ActionFilterAttributes\ResponseCorrelationAttributeTests.cs" />
     <Compile Include="Extensions\HeaderUtilities.cs" />
     <Compile Include="Extensions\StringExtensionsTests.cs" />
+    <Compile Include="HttpRequestMessages\HttpRequestTests.cs" />
+    <Compile Include="HttpResponseMessages\HttpResponseTests.cs" />
     <Compile Include="ValidationAttributes\GuidNotEmptyAttributeTests.cs" />
     <Compile Include="ActionFilterAttributes\RequestCorrelationAttributeTests.cs" />
     <Compile Include="HttpActionContextFactory.cs" />
