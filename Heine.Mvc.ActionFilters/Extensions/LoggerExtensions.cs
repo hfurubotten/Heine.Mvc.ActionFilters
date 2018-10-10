@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net.Http;
 using NLog;
 
@@ -24,7 +25,26 @@ namespace Heine.Mvc.ActionFilters.Extensions
             logger.Log(LogLevel.Error, request, response, message);
         }
 
-        public static void Log(this ILogger logger, LogLevel logLevel, HttpRequestMessage request, HttpResponseMessage response, string message = "")
+
+        public static void Debug(this ILogger logger, Stopwatch stopwatch, HttpRequestMessage request, HttpResponseMessage response, string message = "")
+        {
+            logger.Log(LogLevel.Debug, request, response, message, stopwatch);
+        }
+        public static void Info(this ILogger logger, Stopwatch stopwatch, HttpRequestMessage request, HttpResponseMessage response, string message = "")
+        {
+            logger.Log(LogLevel.Info, request, response, message, stopwatch);
+        }
+        public static void Warn(this ILogger logger, Stopwatch stopwatch, HttpRequestMessage request, HttpResponseMessage response, string message = "")
+        {
+            logger.Log(LogLevel.Warn, request, response, message, stopwatch);
+        }
+
+        public static void Error(this ILogger logger, Stopwatch stopwatch, HttpRequestMessage request, HttpResponseMessage response, string message = "")
+        {
+            logger.Log(LogLevel.Error, request, response, message, stopwatch);
+        }
+
+        public static void Log(this ILogger logger, LogLevel logLevel, HttpRequestMessage request, HttpResponseMessage response, string message = "", Stopwatch stopwatch = null)
         {
             if (!logger.IsEnabled(logLevel)) return;
 
@@ -48,7 +68,9 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 "Http version: {HttpResponseVersion} \n" +
                 "Content Class Name: {HttpResponseContentClassName} \n" +
                 "Headers: {@HttpResponseHeaders} \n\n" +
-                "Body: \n{HttpResponseBody}", 
+                "Body: \n{HttpResponseBody} \n\n" +
+                "Benchmarking: \n" +
+                "ElapsedTime: {ElapsedTime}", 
 
                 _request.method,
                 _request.requestUri,
@@ -62,10 +84,12 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 _response.version,
                 _response.contentTypeName,
                 _response.headers,
-                _response.body);
+                _response.body,
+                
+                stopwatch?.ElapsedMilliseconds);
         }
 
-        public static void Log(this ILogger logger, LogLevel logLevel, Exception ex, HttpRequestMessage request, HttpResponseMessage response, string message = "")
+        public static void Log(this ILogger logger, LogLevel logLevel, Exception ex, HttpRequestMessage request, HttpResponseMessage response, string message = "", Stopwatch stopwatch = null)
         {
             if (!logger.IsEnabled(logLevel)) return;
 
@@ -89,7 +113,9 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 "Http version: {HttpResponseVersion} \n" +
                 "Content Class Name: {HttpResponseContentClassName} \n" +
                 "Headers: {@HttpResponseHeaders} \n\n" +
-                "Body: \n{HttpResponseBody}", 
+                "Body: \n{HttpResponseBody} \n\n", 
+                "Benchmarking: \n" +
+                "ElapsedTime: {ElapsedTime}", 
 
                 _request.method,
                 _request.requestUri,
@@ -103,7 +129,9 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 _response.version,
                 _response.contentTypeName,
                 _response.headers,
-                _response.body);
+                _response.body,
+                
+                stopwatch?.ElapsedMilliseconds);
         }
     }
 
