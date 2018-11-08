@@ -45,7 +45,7 @@ namespace Heine.Mvc.ActionFilters.ActionFilterAttributes
 
             if (principal?.Identity != null && principal.Identity.IsAuthenticated)
             {
-                actionContext.Response = actionContext.ControllerContext.Request.CreateErrorResponse(HttpStatusCode.Forbidden, "You are not authorized to use this endpoint.");
+                actionContext.Response = actionContext.ControllerContext.Request.CreateErrorResponse(HttpStatusCode.Forbidden, $"You are not authorized to use this endpoint. The following roles are required: {Roles}");
             }
             else
             {
