@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionFilterAttributes\AuditRequestAttribute.cs" />
+    <Compile Include="ActionFilterAttributes\AzureAuthorizeAttribute.cs" />
     <Compile Include="ActionFilterAttributes\ResponseCorrelationAttribute.cs" />
     <Compile Include="Exceptions\BadRequestException.cs" />
     <Compile Include="Exceptions\ConflictException.cs" />
