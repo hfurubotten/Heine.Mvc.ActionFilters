@@ -49,7 +49,7 @@ namespace Heine.Mvc.ActionFilters.ActionFilterAttributes
                 if (Roles.Split(',').Length > 1)
                     errorMessage += $" At least one of the following roles are required: {Roles.Replace(",", ", ")}";
                 else
-                    errorMessage += $" The following roles is required: {Roles}";
+                    errorMessage += $" The following role is required: {Roles}";
 
                 actionContext.Response = actionContext.ControllerContext.Request.CreateErrorResponse(HttpStatusCode.Forbidden, errorMessage);
             }
