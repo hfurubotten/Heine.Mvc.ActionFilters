@@ -31,7 +31,8 @@ namespace Heine.Mvc.ActionFilters.Extensions
             }
             catch (Exception ex)
             {
-                return $"Unable to read body of HTTP content:\n{string.Join("\n", ex.GetMessages().Select(message => $"- '{message}'"))}";
+                return
+                    $"Unable to read body of HTTP content:\n{string.Join("\n", ex.GetMessages().Select(message => $"- '{message}'"))}";
             }
 
             string Format(string content)
@@ -39,11 +40,25 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 switch (httpContent.Headers?.ContentType?.MediaType)
                 {
                     case "application/json":
-                        try { return Obfuscate(JToken.Parse(content), httpHeaders).ToString(Formatting.Indented); }
-                        catch { return content; }
+                        try
+                        {
+                            return Obfuscate(JToken.Parse(content), httpHeaders).ToString(Formatting.Indented);
+                        }
+                        catch
+                        {
+                            return content;
+                        }
+
                     case "application/xml":
-                        try { return XDocument.Parse(content).ToString(); }
-                        catch { return content; }
+                        try
+                        {
+                            return XDocument.Parse(content).ToString();
+                        }
+                        catch
+                        {
+                            return content;
+                        }
+
                     default:
                         return content;
                 }
@@ -58,20 +73,21 @@ namespace Heine.Mvc.ActionFilters.Extensions
                     {
                         if (jPath.IsArray)
                         {
-                            foreach (var item in jToken.SelectTokens($"{jPath.Path}.{property}"))
+                            foreach (var token in jToken.SelectTokens(jPath.Path).CaseInsensitiveSelectPropertyValues(property))
                             {
-                                if (!item.IsNullOrEmpty())
-                                    item.Replace("*** OBFUSCATED ***");
+                                if (!token.IsNullOrEmpty())
+                                    token.Replace("*** OBFUSCATED ***");
                             }
                         }
                         else
                         {
-                            var token = jToken.SelectToken($"{jPath.Path}.{property}");
+                            var token = jToken.SelectToken(jPath.Path).CaseInsensitiveSelectPropertyValue(property);
                             if (!token.IsNullOrEmpty())
                                 token.Replace("*** OBFUSCATED ***");
                         }
                     }
                 }
+
                 return jToken;
             }
         }
