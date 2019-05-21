@@ -4,36 +4,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Reflection;
-using Heine.Mvc.ActionFilters.Extensions;
 
 namespace Heine.Mvc.ActionFilters.Services
 {
     public class ObfuscaterService : IObfuscaterService
     {
-        private readonly bool camelCase;
         private const string HeaderKeyXObfuscate = "X-Obfuscate";
 
-        public ObfuscaterService(bool camelCase, params Assembly[] assemblies)
+        public ObfuscaterService(params Assembly[] assemblies)
         {
-            this.camelCase = camelCase;
             TypeObfuscationGraphs = Initialize(assemblies);
         }
 
         //TODO: Refactor this to be recursive and prettier :) But it works for now as a PoC! :D
         public IDictionary<Type, IList<string>> Initialize(params Assembly[] assemblies)
         {
-            string FormatPropertyName(string propertyName)
-            {
-                return camelCase 
-                    ? propertyName.ToCamelCase()
-                    : propertyName;
-            }
-
             string BuildPropertyName(PropertyInfo propertyInfo)
             {
                 return typeof(IEnumerable).IsAssignableFrom(propertyInfo.PropertyType)
-                    ? $"{FormatPropertyName(propertyInfo.Name)}[*]" //Array
-                    : FormatPropertyName(propertyInfo.Name); // Object or scalar value
+                    ? $"{propertyInfo.Name}[*]" //Array
+                    : propertyInfo.Name; // Object or scalar value
             }
 
             Type GetCorrectType(Type type)
@@ -57,7 +47,7 @@ namespace Heine.Mvc.ActionFilters.Services
                     {
                         foreach (var propertyInfo in type.GetProperties())
                         {
-                            properties.Add(FormatPropertyName(propertyInfo.Name));
+                            properties.Add(propertyInfo.Name);
                         }
                     }
                     else
@@ -66,7 +56,7 @@ namespace Heine.Mvc.ActionFilters.Services
                         {
                             if (Attribute.IsDefined(propertyInfo1, typeof(ObfuscationAttribute)))
                             {
-                                properties.Add(FormatPropertyName(propertyInfo1.Name));
+                                properties.Add(propertyInfo1.Name);
                             }
                             else if (propertyInfo1.PropertyType.IsClass)
                             {
@@ -76,7 +66,7 @@ namespace Heine.Mvc.ActionFilters.Services
                                 {
                                     if (Attribute.IsDefined(propertyInfo2, typeof(ObfuscationAttribute)))
                                     {
-                                        properties.Add($"{BuildPropertyName(propertyInfo1)}.{FormatPropertyName(propertyInfo2.Name)}");
+                                        properties.Add($"{BuildPropertyName(propertyInfo1)}.{propertyInfo2.Name}");
                                     }
                                     else if (propertyInfo2.PropertyType.IsClass)
                                     {
@@ -86,7 +76,7 @@ namespace Heine.Mvc.ActionFilters.Services
                                         {
                                             if (Attribute.IsDefined(propertyInfo3, typeof(ObfuscationAttribute)))
                                             {
-                                                properties.Add($"{BuildPropertyName(propertyInfo1)}.{BuildPropertyName(propertyInfo2)}.{FormatPropertyName(propertyInfo3.Name)}");
+                                                properties.Add($"{BuildPropertyName(propertyInfo1)}.{BuildPropertyName(propertyInfo2)}.{propertyInfo3.Name}");
                                             }
                                         }
                                     }
