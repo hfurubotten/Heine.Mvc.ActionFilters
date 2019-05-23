@@ -10,7 +10,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
 {
     public static class HttpContentExtensions
     {
-        public static string ReadAsString(this HttpContent httpContent, HttpHeaders httpHeaders)
+        public static string ReadAsString(this HttpContent httpContent, HttpHeaders httpHeaders, bool isHttpResponse)
         {
             try
             {
@@ -42,7 +42,8 @@ namespace Heine.Mvc.ActionFilters.Extensions
                     case "application/json":
                         try
                         {
-                            return Obfuscate(JToken.Parse(content), httpHeaders).ToString(Formatting.Indented);
+                            return Obfuscate(JToken.Parse(content), httpHeaders)
+                                .ToString(Formatting.Indented);
                         }
                         catch
                         {
@@ -71,17 +72,20 @@ namespace Heine.Mvc.ActionFilters.Extensions
                     var jPath = jToken is JArray ? (IsArray: true, Path: "$[*]") : (IsArray: false, Path: "$");
                     foreach (var property in properties)
                     {
-                        if (jPath.IsArray)
+                        // APIs supports both camel case and pascal case.
+                        // Trying to first select with pascal case.
+                        var tokens = jToken.SelectTokens($"{jPath.Path}.{property}");
+
+                        // Try selecting with camel case if no tokens were found with pascal case.
+                        if (!tokens.Any())
+                            tokens = jToken.SelectTokens($"{jPath.Path}.{property.JsonPathToCamelCase()}");
+
+                        // Trying to select with alternative path because it could be an OData req/resp.
+                        if (!jPath.IsArray && isHttpResponse && !tokens.Any())
+                            tokens = jToken.SelectTokens($"{jPath.Path}.value[*].{property.JsonPathToCamelCase()}");
+
+                        foreach (var token in tokens)
                         {
-                            foreach (var token in jToken.SelectTokens(jPath.Path).CaseInsensitiveSelectPropertyValues(property))
-                            {
-                                if (!token.IsNullOrEmpty())
-                                    token.Replace("*** OBFUSCATED ***");
-                            }
-                        }
-                        else
-                        {
-                            var token = jToken.SelectToken(jPath.Path).CaseInsensitiveSelectPropertyValue(property);
                             if (!token.IsNullOrEmpty())
                                 token.Replace("*** OBFUSCATED ***");
                         }
