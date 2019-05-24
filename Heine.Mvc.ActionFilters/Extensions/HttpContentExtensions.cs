@@ -65,6 +65,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 }
             }
 
+            // ReSharper disable PossibleMultipleEnumeration
             JToken Obfuscate(JToken jToken, HttpHeaders headers)
             {
                 if (headers.TryGetValues("X-Obfuscate", out var properties))
