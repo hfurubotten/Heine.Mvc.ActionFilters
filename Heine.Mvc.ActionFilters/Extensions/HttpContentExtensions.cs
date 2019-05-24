@@ -87,12 +87,42 @@ namespace Heine.Mvc.ActionFilters.Extensions
                         foreach (var token in tokens)
                         {
                             if (!token.IsNullOrEmpty())
-                                token.Replace("*** OBFUSCATED ***");
+                            {
+                                // JToken can be of type JArray, JObject, JProperty or JValue.
+                                if (token.Type == JTokenType.Array)
+                                {
+                                    foreach (var obj in token)
+                                    {
+                                        ObfuscateObject(obj);
+                                    }
+                                }
+                                else if (token.Type == JTokenType.Object)
+                                {
+                                    ObfuscateObject(token);
+                                }
+                                else
+                                {
+                                    token.Replace("*** OBFUSCATED ***");
+                                }
+                            }
                         }
                     }
                 }
-
                 return jToken;
+            }
+
+            // Obfuscate each property (JProperty) of object (JObject)
+            void ObfuscateObject(JToken token)
+            {
+                // JObject will always only contain properties of type JProperty.
+                foreach (var prop in token)
+                {
+                    if (!prop.IsNullOrEmpty())
+                    {
+                        // Each property will always have one key/value pair.
+                        prop.First.Replace("*** OBFUSCATED ***");
+                    }
+                }
             }
         }
     }
