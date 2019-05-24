@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Heine.Mvc.ActionFilters.Extensions
 {
@@ -18,5 +19,56 @@ namespace Heine.Mvc.ActionFilters.Extensions
 
             return source.Substring(0, low) + new string(c, high);
         }
+
+        /// <summary>
+        ///     Convert the json path string to camel case.
+        /// </summary>
+        /// <param name="string"></param>
+        /// <returns></returns>
+        public static string JsonPathToCamelCase(this string @string)
+        {
+            // If there are 0 or 1 characters, just return the string.
+            if (@string == null || @string.Length < 2)
+                return @string;
+
+            // Split the string on punctuation.
+            var words = @string.Split('.');
+
+            if (words.Length == 1)
+                return words.First().FirstLetterToLower();
+
+            // Camel case the word and combine into one string.
+            var result = "";
+            for (var i = 0; i < words.Length; i++)
+            {
+                // Skip punctuation if last word.
+                if (i == words.Length - 1)
+                {
+                    result += words[i].FirstLetterToLower();
+                    continue;
+                }
+                result += words[i].FirstLetterToLower() + ".";
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        ///     Turns the first character in any string to lower case.
+        /// </summary>
+        /// <param name="source">The string to convert the casing on.</param>
+        /// <returns>The new string with the changed casing.</returns>
+        private static string FirstLetterToLower(this string source)
+        {
+            if (source == null)
+                return null;
+
+            if (source.Length > 1)
+                return char.ToLower(source[0]) + source.Substring(1);
+
+            return source.ToUpper();
+        }
+
+
     }
 }
