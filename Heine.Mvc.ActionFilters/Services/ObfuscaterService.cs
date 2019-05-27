@@ -12,7 +12,7 @@ namespace Heine.Mvc.ActionFilters.Services
         private readonly int expandDepth;
         private const string HeaderKeyXObfuscate = "X-Obfuscate";
 
-        public ObfuscaterService(int expandDepth = 5, params Assembly[] assemblies)
+        public ObfuscaterService(int expandDepth, params Assembly[] assemblies)
         {
             this.expandDepth = expandDepth;
             TypeObfuscationGraphs = Initialize(assemblies);
