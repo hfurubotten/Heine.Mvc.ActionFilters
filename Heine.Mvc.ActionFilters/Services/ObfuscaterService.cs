@@ -38,39 +38,75 @@ namespace Heine.Mvc.ActionFilters.Services
                 return type;
             }
 
-            void AddObfuscateProperties(Type type, ref List<string> properties, string prevBuildProps,
-                PropertyInfo prevPropInfo, int depth)
+            void AddObfuscateProperties(Type type, ref List<string> properties, List<PropertyInfo> prevPropList,
+                int depth)
             {
                 if (depth == 0)
                     return;
 
+                // Check if type is already present in list of previous properties.
+                // If so it should not be traversed.
+                if (prevPropList != null)
+                {
+                    var typeName = type.FullName;
+                    foreach (var prop in prevPropList)
+                    {
+                        //if (prop.PropertyType.FullName == typeName)
+                        //{
+                        //    return;
+                        //}
+                        if (prop.DeclaringType?.FullName == typeName)
+                        {
+                            return;
+                        }
+                    }
+                }
+
                 foreach (var propertyInfo in type.GetProperties())
                 {
+                    // Empty all previous properties because method is at root.
+                    if (depth == expandDepth)
+                    {
+                        prevPropList = new List<PropertyInfo>();
+                    }
+
+                    // When circling back after a recursive call there will be element/s in list
+                    // which should not be present at current depth.
+                    // Therefore need to remove all the last elements in list which whould not be at current depth.
+                    if (prevPropList.Count > expandDepth - depth)
+                    {
+                        var numberOfRecordsToDelete = prevPropList.Count - (expandDepth - depth);
+                        for (var i = 0; i < numberOfRecordsToDelete; i++)
+                        {
+                            prevPropList.RemoveAt(prevPropList.Count - 1);
+                        }
+                    }
+
                     if (Attribute.IsDefined(propertyInfo, typeof(ObfuscationAttribute)))
                     {
-                        // First expand
-                        if (depth == expandDepth)
+                        if (!prevPropList.Any())
                         {
                             properties.Add(propertyInfo.Name);
                         }
-                        // Second expand
-                        else if (depth == expandDepth - 1)
-                        {
-                            prevBuildProps = BuildPropertyName(prevPropInfo);
-                            properties.Add($"{prevBuildProps}.{propertyInfo.Name}");
-                        }
                         else
                         {
-                            prevBuildProps = $"{prevBuildProps}.{BuildPropertyName(prevPropInfo)}";
-                            properties.Add($"{prevBuildProps}.{propertyInfo.Name}");
+                            var jPath = string.Empty;
+
+                            foreach (var prop in prevPropList)
+                            {
+                                jPath += $"{BuildPropertyName(prop)}.";
+                            }
+
+                            properties.Add($"{jPath}{propertyInfo.Name}");
                         }
                     }
                     else if (propertyInfo.PropertyType.IsClass)
                     {
-                        if (depth-1 <= 0) continue;
+                        if (depth - 1 <= 0) continue;
                         var propertyType = GetCorrectType(propertyInfo.PropertyType);
 
-                        AddObfuscateProperties(propertyType, ref properties, prevBuildProps, propertyInfo, depth--);
+                        prevPropList.Add(propertyInfo);
+                        AddObfuscateProperties(propertyType, ref properties, prevPropList, depth - 1);
                     }
                 }
             }
@@ -90,7 +126,7 @@ namespace Heine.Mvc.ActionFilters.Services
                     }
                     else
                     {
-                        AddObfuscateProperties(type, ref properties, string.Empty, null, expandDepth);
+                        AddObfuscateProperties(type, ref properties, null, expandDepth);
                     }
 
                     if (properties.Any())
@@ -101,7 +137,7 @@ namespace Heine.Mvc.ActionFilters.Services
             return typeObfuscationGraphs;
         }
 
-        private IDictionary<Type, IList<string>> TypeObfuscationGraphs { get; set; }
+        public IDictionary<Type, IList<string>> TypeObfuscationGraphs { get; set; }
 
         public void SetObfuscateHeader(HttpHeaders httpHeaders, params Type[] types)
         {
