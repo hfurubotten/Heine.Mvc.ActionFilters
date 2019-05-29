@@ -51,10 +51,6 @@ namespace Heine.Mvc.ActionFilters.Services
                     var typeName = type.FullName;
                     foreach (var prop in prevPropList)
                     {
-                        //if (prop.PropertyType.FullName == typeName)
-                        //{
-                        //    return;
-                        //}
                         if (prop.DeclaringType?.FullName == typeName)
                         {
                             return;

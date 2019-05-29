@@ -9,7 +9,7 @@ namespace Heine.Mvc.ActionFilters.Tests.Services
         [Obfuscation]
         public string Content { get; set; }
         public string Type { get; set; }
-        public Person Owner { get; set; }
         public List<Person> Persons { get; set; }
+        public Person Owner { get; set; }
     }
 }

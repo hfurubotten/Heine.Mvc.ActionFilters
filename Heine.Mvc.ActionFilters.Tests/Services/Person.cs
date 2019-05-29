@@ -7,10 +7,11 @@ namespace Heine.Mvc.ActionFilters.Tests.Services
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public List<Document> Documents { get; set; }
+        public Document[] PrivateDocuments { get; set; }
         [Obfuscation]
         public string Mobil { get; set; }
         [Obfuscation]
         public string BankAccNo { get; set; }
-        public List<Document> Documents { get; set; }
     }
 }
