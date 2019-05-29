@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 
-namespace Heine.Mvc.ActionFilters.Tests.Services
+namespace Heine.Mvc.ActionFilters.Tests.Services.Models
 {
     public class Document
     {

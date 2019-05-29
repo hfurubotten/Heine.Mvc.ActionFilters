@@ -2,6 +2,7 @@
 using System.Reflection;
 using FluentAssertions;
 using Heine.Mvc.ActionFilters.Services;
+using Heine.Mvc.ActionFilters.Tests.Services.Models;
 using NUnit.Framework;
 
 namespace Heine.Mvc.ActionFilters.Tests.Services
