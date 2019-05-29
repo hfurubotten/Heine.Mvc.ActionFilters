@@ -93,6 +93,12 @@ namespace Heine.Mvc.ActionFilters.Services
                                 jPath += $"{BuildPropertyName(prop)}.";
                             }
 
+                            // Replace invalid list json path.
+                            if (jPath.Contains("[*].Item."))
+                            {
+                                jPath = jPath.Replace("[*].Item.", "[*].");
+                            }
+
                             properties.Add($"{jPath}{propertyInfo.Name}");
                         }
                     }
