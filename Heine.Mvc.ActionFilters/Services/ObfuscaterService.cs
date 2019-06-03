@@ -49,11 +49,16 @@ namespace Heine.Mvc.ActionFilters.Services
                 if (prevPropList != null)
                 {
                     var typeName = type.FullName;
-                    foreach (var prop in prevPropList)
+                    // Support a class referencing itself,
+                    // but check for reference loop in other cases.
+                    if (!(prevPropList.Count == 1 && typeName == prevPropList.First().DeclaringType?.FullName))
                     {
-                        if (prop.DeclaringType?.FullName == typeName)
+                        foreach (var prop in prevPropList)
                         {
-                            return;
+                            if (prop.DeclaringType?.FullName == typeName)
+                            {
+                                return;
+                            }
                         }
                     }
                 }
