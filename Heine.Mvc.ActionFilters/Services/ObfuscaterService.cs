@@ -32,8 +32,8 @@ namespace Heine.Mvc.ActionFilters.Services
                 if (type.IsArray)
                     return type.GetElementType();
 
-                if (typeof(IEnumerable<>).IsAssignableFrom(type))
-                    return type.GetGenericTypeDefinition();
+                if (type.IsGenericType && type.GetInterfaces().Contains(typeof(IEnumerable)))
+                    return type.GetGenericArguments().Single();
 
                 return type;
             }
@@ -98,16 +98,10 @@ namespace Heine.Mvc.ActionFilters.Services
                                 jPath += $"{BuildPropertyName(prop)}.";
                             }
 
-                            // Replace invalid list json path.
-                            if (jPath.Contains("[*].Item."))
-                            {
-                                jPath = jPath.Replace("[*].Item.", "[*].");
-                            }
-
                             properties.Add($"{jPath}{propertyInfo.Name}");
                         }
                     }
-                    else if (propertyInfo.PropertyType.IsClass)
+                    else if (propertyInfo.PropertyType.IsClass || propertyInfo.PropertyType.IsInterface)
                     {
                         if (depth - 1 <= 0) continue;
                         var propertyType = GetCorrectType(propertyInfo.PropertyType);
