@@ -11,5 +11,6 @@ namespace Heine.Mvc.ActionFilters.Tests.Services.Models
         public string Type { get; set; }
         public List<Person> Persons { get; set; }
         public Person Owner { get; set; }
+        public Document Parent { get; set; }
     }
 }

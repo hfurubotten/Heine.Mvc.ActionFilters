@@ -33,12 +33,17 @@ namespace Heine.Mvc.ActionFilters.Tests.Services
             obfuscationGraph.Should().NotBeEmpty();
             documentGraph.Should().NotBeEmpty();
             personGraph.Should().NotBeEmpty();
-            documentGraph.Count.Should().Be(5);
+            documentGraph.Count.Should().Be(10);
             documentGraph.FirstOrDefault(s => s.Contains("Content")).Should().NotBeNullOrEmpty();
             documentGraph.FirstOrDefault(s => s.Contains("Owner.Mobil")).Should().NotBeNullOrEmpty();
             documentGraph.FirstOrDefault(s => s.Contains("Owner.BankAccNo")).Should().NotBeNullOrEmpty();
             documentGraph.FirstOrDefault(s => s.Contains("Persons[*].Mobil")).Should().NotBeNullOrEmpty();
             documentGraph.FirstOrDefault(s => s.Contains("Persons[*].BankAccNo")).Should().NotBeNullOrEmpty();
+            documentGraph.FirstOrDefault(s => s.Contains("Parent.Content")).Should().NotBeNullOrEmpty();
+            documentGraph.FirstOrDefault(s => s.Contains("Parent.Owner.Mobil")).Should().NotBeNullOrEmpty();
+            documentGraph.FirstOrDefault(s => s.Contains("Parent.Owner.BankAccNo")).Should().NotBeNullOrEmpty();
+            documentGraph.FirstOrDefault(s => s.Contains("Parent.Persons[*].Mobil")).Should().NotBeNullOrEmpty();
+            documentGraph.FirstOrDefault(s => s.Contains("Parent.Persons[*].BankAccNo")).Should().NotBeNullOrEmpty();
             personGraph.Count.Should().Be(4);
             personGraph.FirstOrDefault(s => s.Contains("BankAccNo")).Should().NotBeNullOrEmpty();
             personGraph.FirstOrDefault(s => s.Contains("Mobil")).Should().NotBeNullOrEmpty();
