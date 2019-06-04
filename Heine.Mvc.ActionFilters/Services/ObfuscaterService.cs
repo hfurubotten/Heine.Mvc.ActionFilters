@@ -33,7 +33,7 @@ namespace Heine.Mvc.ActionFilters.Services
                     return type.GetElementType();
 
                 if (type.IsGenericType && type.GetInterfaces().Contains(typeof(IEnumerable)))
-                    return type.GetGenericArguments().Single();
+                    return type.GetGenericArguments().Last();
 
                 return type;
             }
