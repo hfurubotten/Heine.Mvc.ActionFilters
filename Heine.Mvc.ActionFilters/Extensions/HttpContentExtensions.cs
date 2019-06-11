@@ -81,7 +81,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
                         if (!tokens.Any())
                             tokens = jToken.SelectTokens($"{jPath.Path}.{property.JsonPathToCamelCase()}");
 
-                        // Trying to select with alternative path because it could be an OData req/resp.
+                        // Trying to select with alternative path because it could be an OData resp.
                         if (!jPath.IsArray && isHttpResponse && !tokens.Any())
                             tokens = jToken.SelectTokens($"{jPath.Path}.value[*].{property.JsonPathToCamelCase()}");
 
@@ -121,7 +121,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
                     if (!prop.IsNullOrEmpty())
                     {
                         // Each property will always have one key/value pair.
-                        prop.First.Replace("*** OBFUSCATED ***");
+                        prop.Single().Replace("*** OBFUSCATED ***");
                     }
                 }
             }
