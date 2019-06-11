@@ -227,6 +227,28 @@ namespace Heine.Mvc.ActionFilters.Tests.Extensions
             }
         }
 
+        [TestCase("name", ODataValueContent)]
+        public void Obfuscate_SamePropertyInsideAndOutsideOfValueArray_OData(string obfuscateValue, string jsonContent)
+        {
+            // Arrange
+            httpResponseMessage.Headers.TryAddWithoutValidation("X-Obfuscate", new List<string> { "Name" });
+            httpResponseMessage.Content = new StringContent(jsonContent);
+            httpResponseMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            // Act
+            var content = httpResponseMessage.Content.ReadAsString(httpResponseMessage.Headers, true);
+            var obj = JObject.Parse(content);
+
+            // Assert
+            obj.Should().NotBeNull();
+            obj[obfuscateValue].Value<string>().Should().Be(ObfuscateValue);
+            obj["value"].Should().NotBeNull();
+            foreach (var item in obj["value"])
+            {
+                item[obfuscateValue].Value<string>().Should().Be(ObfuscateValue);
+            }
+        }
+
         private const string PascalCaseContent =
             "{\"CaseNumber\":\"2017/901674\",\"CaseHandler\":\"hefur\",\"Document\":\"0AE132314QFQESA\",\"Title\":\"IntegrationTestDocument\",\"JournalTitle\":\"IntegrationTestDocument\",\"Format\":\"pdf\",\"AccountName\":\"TestAccount\",\"AccountId\":\"923313850\",\"Type\":\"Outgoing\",\"Private\":{\"Name\":\"PetterPettersen\",\"AccountNo\":\"123456789\"},\"ExternalRecipients\":[{\"Account\":{\"Name\":\"PålFredriksen\",\"AccountNo\":\"987654321\"},\"Relationships\":[{\"Name\":\"Hansen\"},{\"Tlf\":\"92247789\"}],\"AccountId\":\"923313850\",\"IsCopyRecipient\":false,\"FullName\":\"PålFredriksen\",\"EmailAddress\":\"test1@test.net\",\"Mobile\":\"92247881\"},{\"Account\":{\"Name\":\"PålHansen\",\"AccountNo\":\"852741369\"},\"Relationships\":[{\"Name\":\"Hansen\"},{\"Tlf\":\"92247789\"}],\"AccountId\":\"923313851\",\"IsCopyRecipient\":false,\"FullName\":\"PålHansen\",\"EmailAddress\":\"test2@test.net\",\"Mobile\":\"92247882\"}],\"InternalRecipients\":[{\"Username\":\"hefur\",\"IsCopyRecipient\":false,\"ExemptFromPublic\":true}],\"AccessCode\":\"UO\",\"JournalStatus\":\"F\"}";
 
@@ -240,7 +262,7 @@ namespace Heine.Mvc.ActionFilters.Tests.Extensions
             "[{\"caseNumber\":\"2017/901674\",\"caseHandler\":\"hefur\",\"document\":\"0AE132314QFQESA\",\"title\":\"Integration Test Document\",\"journalTitle\":\"Integration Test Document\",\"format\":\"pdf\",\"accountName\":\"Test Account\",\"accountId\":\"923313850\",\"type\":\"Outgoing\",\"private\":{\"name\":\"Petter Pettersen\",\"accountNo\":\"123456789\"},\"externalRecipients\":[{\"account \":{\"name\":\"Pål Fredriksen\",\"accountNo\":\"987654321\"},\"relationships\":[{\"name\":\"Hansen\"},{\"tlf\":\"92247789\"}],\"accountId\":\"923313850\",\"isCopyRecipient\":false,\"fullName\":\"Pål Fredriksen\",\"emailAddress\":\"test1@test.net\",\"mobile\":\"92247881\"},{\"account \":{\"name\":\"Pål Hansen\",\"accountNo\":\"852741369\"},\"relationships\":[{\"name\":\"Hansen\"},{\"tlf\":\"92247789\"}],\"accountId\":\"923313851\",\"isCopyRecipient\":false,\"fullName\":\"Pål Hansen\",\"emailAddress\":\"test2@test.net\",\"mobile\":\"92247882\"}],\"internalRecipients\":[{\"username\":\"hefur\",\"isCopyRecipient\":false,\"exemptFromPublic\":true}],\"accessCode\":\"UO\",\"journalStatus\":\"F\"}]";
 
         private const string ODataValueContent =
-            "{\"@odata.context\":\"some context\",\"value\":[{\"title\":\"Kredittsjekk - 15.05.2019\",\"format\":\"PDF\",\"archiveReference\":{\"id\":\"959160ff-3563-462a-96de-88b0713bf248\",\"archiveDocumentId\":1495448,\"journalId\":824435,\"caseId\":158036,\"name\":\"Kredittsjekk - 15.05.2019\",\"version\":1,\"archivedOn\":\"2019-05-15T08:35:45.0697052Z\",\"documentDirection\":\"Internal\"},\"children\":[]},{\"title\":\"Søknad om tradisjonell bruksutbygging\",\"format\":\"HTML\",\"archiveReference\":{\"id\":\"f453a994-9c4a-4098-b482-d14b5651b497\",\"archiveDocumentId\":1495446,\"journalId\":824434,\"caseId\":158036,\"name\":\"Søknad om tradisjonell bruksutbygging\",\"version\":1,\"archivedOn\":\"2019-05-15T08:35:22.1412998Z\",\"documentDirection\":\"Incoming\"},\"children\":[{\"id\":\"cf0862c9-8285-4756-9f9d-2fb8122e1f83\",\"ownerId\":\"0e85a952-8333-4dd0-a6cc-e5f67fa8684b\",\"regardingId\":\"0e85a952-8333-4dd0-a6cc-e5f67fa8684b\",\"regardingEntity\":\"ci_application\",\"format\":\"pdf\",\"title\":\"GPL License Terms.pdf\",\"content\":\"JVBERi0xLjQNJeLjz9MNCjE\",\"type\":\"Attachment\",\"parentId\":\"f453a994-9c4a-4098-b482-d14b5651b497\",\"revision\":0,\"revisionOfId\":null,\"createdOn\":\"2019-05-15T08:34:27.2572211Z\",\"modifiedOn\":\"2019-05-15T08:34:27.2572211Z\",\"createdBy\":\"59ece3d7-2478-441a-98b6-bba58adf9304\",\"modifiedBy\":\"59ece3d7-2478-441a-98b6-bba58adf9304\",\"archiveReference\":{\"id\":\"cf0862c9-8285-4756-9f9d-2fb8122e1f83\",\"archiveDocumentId\":1495447,\"journalId\":824434,\"caseId\":0,\"name\":\"GPL License Terms.pdf\",\"version\":0,\"archivedOn\":\"2019-05-15T10:35:23.173925Z\",\"documentDirection\":\"Incoming\"},\"relationships\":[{\"name\":\"Petter Pettersen\",\"accountNo\":\"12345678\"},{\"name\":\"Petter Tork\",\"accountNo\":\"9876542\"}]}]}]}";
+            "{\"@odata.context\":\"some context\",\"name\":\"Petter Olsen\",\"value\":[{\"title\":\"Kredittsjekk - 15.05.2019\",\"format\":\"PDF\",\"archiveReference\":{\"id\":\"959160ff-3563-462a-96de-88b0713bf248\",\"archiveDocumentId\":1495448,\"journalId\":824435,\"caseId\":158036,\"name\":\"Kredittsjekk - 15.05.2019\",\"version\":1,\"archivedOn\":\"2019-05-15T08:35:45.0697052Z\",\"documentDirection\":\"Internal\"},\"name\":\"Petter Olsen\",\"children\":[]},{\"title\":\"Søknad om tradisjonell bruksutbygging\",\"format\":\"HTML\",\"archiveReference\":{\"id\":\"f453a994-9c4a-4098-b482-d14b5651b497\",\"archiveDocumentId\":1495446,\"journalId\":824434,\"caseId\":158036,\"name\":\"Søknad om tradisjonell bruksutbygging\",\"version\":1,\"archivedOn\":\"2019-05-15T08:35:22.1412998Z\",\"documentDirection\":\"Incoming\"},\"name\":\"Petter Olsen\",\"children\":[{\"id\":\"cf0862c9-8285-4756-9f9d-2fb8122e1f83\",\"ownerId\":\"0e85a952-8333-4dd0-a6cc-e5f67fa8684b\",\"regardingId\":\"0e85a952-8333-4dd0-a6cc-e5f67fa8684b\",\"regardingEntity\":\"ci_application\",\"format\":\"pdf\",\"title\":\"GPL License Terms.pdf\",\"content\":\"JVBERi0xLjQNJeLjz9MNCjE\",\"type\":\"Attachment\",\"parentId\":\"f453a994-9c4a-4098-b482-d14b5651b497\",\"revision\":0,\"revisionOfId\":null,\"createdOn\":\"2019-05-15T08:34:27.2572211Z\",\"modifiedOn\":\"2019-05-15T08:34:27.2572211Z\",\"createdBy\":\"59ece3d7-2478-441a-98b6-bba58adf9304\",\"modifiedBy\":\"59ece3d7-2478-441a-98b6-bba58adf9304\",\"archiveReference\":{\"id\":\"cf0862c9-8285-4756-9f9d-2fb8122e1f83\",\"archiveDocumentId\":1495447,\"journalId\":824434,\"caseId\":0,\"name\":\"GPL License Terms.pdf\",\"version\":0,\"archivedOn\":\"2019-05-15T10:35:23.173925Z\",\"documentDirection\":\"Incoming\"},\"relationships\":[{\"name\":\"Petter Pettersen\",\"accountNo\":\"12345678\"},{\"name\":\"Petter Tork\",\"accountNo\":\"9876542\"}]}]}]}";
 
         private static string ObfuscateValue => "*** OBFUSCATED ***";
     }
