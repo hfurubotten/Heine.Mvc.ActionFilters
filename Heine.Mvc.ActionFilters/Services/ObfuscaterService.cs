@@ -22,8 +22,13 @@ namespace Heine.Mvc.ActionFilters.Services
         {
             string BuildPropertyName(PropertyInfo propertyInfo)
             {
-                return typeof(IEnumerable).IsAssignableFrom(propertyInfo.PropertyType)
-                    ? $"{propertyInfo.Name}[*]" //Array
+                var propertyType = propertyInfo.PropertyType;
+
+                if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(ICollection<>))
+                    return $"{propertyInfo.Name}[*]";
+
+                return typeof(ICollection).IsAssignableFrom(propertyType)
+                    ? $"{propertyInfo.Name}[*]" // Collection
                     : propertyInfo.Name; // Object or scalar value
             }
 
@@ -87,7 +92,7 @@ namespace Heine.Mvc.ActionFilters.Services
                     {
                         if (!prevPropList.Any())
                         {
-                            properties.Add(propertyInfo.Name);
+                            properties.Add(BuildPropertyName(propertyInfo));
                         }
                         else
                         {
@@ -98,7 +103,7 @@ namespace Heine.Mvc.ActionFilters.Services
                                 jPath += $"{BuildPropertyName(prop)}.";
                             }
 
-                            properties.Add($"{jPath}{propertyInfo.Name}");
+                            properties.Add($"{jPath}{BuildPropertyName(propertyInfo)}");
                         }
                     }
                     else if (propertyInfo.PropertyType.IsClass || propertyInfo.PropertyType.IsInterface)
@@ -123,7 +128,7 @@ namespace Heine.Mvc.ActionFilters.Services
                     {
                         foreach (var propertyInfo in type.GetProperties())
                         {
-                            properties.Add(propertyInfo.Name);
+                            properties.Add(BuildPropertyName(propertyInfo));
                         }
                     }
                     // Obfuscation attribute on property level.
