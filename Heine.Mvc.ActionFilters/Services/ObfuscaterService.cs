@@ -118,6 +118,7 @@ namespace Heine.Mvc.ActionFilters.Services
                 foreach (var type in assembly.GetTypes())
                 {
                     var properties = new List<string>();
+                    // Obfuscation attribute on class level.
                     if (Attribute.IsDefined(type, typeof(ObfuscationAttribute)))
                     {
                         foreach (var propertyInfo in type.GetProperties())
@@ -125,6 +126,7 @@ namespace Heine.Mvc.ActionFilters.Services
                             properties.Add(propertyInfo.Name);
                         }
                     }
+                    // Obfuscation attribute on property level.
                     else
                     {
                         AddObfuscateProperties(type, ref properties, null, expandDepth);

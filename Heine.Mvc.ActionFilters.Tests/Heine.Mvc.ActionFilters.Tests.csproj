@@ -101,8 +101,8 @@
     <Compile Include="Extensions\HttpContentExtensionsTests.cs" />
     <Compile Include="Extensions\StringExtensionsTests.cs" />
     <Compile Include="Services\Models\Document.cs" />
-    <Compile Include="Services\ObfuscatorServiceTests.cs" />
     <Compile Include="Services\Models\Person.cs" />
+    <Compile Include="Services\ObfuscatorServiceTests.cs" />
     <Compile Include="ValidationAttributes\GuidNotEmptyAttributeTests.cs" />
     <Compile Include="ActionFilterAttributes\RequestCorrelationAttributeTests.cs" />
     <Compile Include="HttpActionContextFactory.cs" />
@@ -123,6 +123,7 @@
       <Name>Heine.Mvc.ActionFilters</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
