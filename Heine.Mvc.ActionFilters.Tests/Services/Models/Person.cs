@@ -13,5 +13,9 @@ namespace Heine.Mvc.ActionFilters.Tests.Services.Models
         public string Mobil { get; set; }
         [Obfuscation]
         public string BankAccNo { get; set; }
+        [Obfuscation]
+        public CreditDetail CreditDetail { get; set; }
+        [Obfuscation]
+        public List<Remark> Remarks { get; set; }
     }
 }

@@ -100,8 +100,10 @@
     <Compile Include="Extensions\HeaderUtilities.cs" />
     <Compile Include="Extensions\HttpContentExtensionsTests.cs" />
     <Compile Include="Extensions\StringExtensionsTests.cs" />
+    <Compile Include="Services\Models\CreditDetail.cs" />
     <Compile Include="Services\Models\Document.cs" />
     <Compile Include="Services\Models\Person.cs" />
+    <Compile Include="Services\Models\Remark.cs" />
     <Compile Include="Services\ObfuscatorServiceTests.cs" />
     <Compile Include="ValidationAttributes\GuidNotEmptyAttributeTests.cs" />
     <Compile Include="ActionFilterAttributes\RequestCorrelationAttributeTests.cs" />
