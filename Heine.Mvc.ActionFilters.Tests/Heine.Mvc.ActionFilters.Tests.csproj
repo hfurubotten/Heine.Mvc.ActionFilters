@@ -105,6 +105,8 @@
     <Compile Include="Services\Models\Person.cs" />
     <Compile Include="Services\Models\Remark.cs" />
     <Compile Include="Services\ObfuscatorServiceTests.cs" />
+    <Compile Include="HttpRequestMessages\HttpRequestTests.cs" />
+    <Compile Include="HttpResponseMessages\HttpResponseTests.cs" />
     <Compile Include="ValidationAttributes\GuidNotEmptyAttributeTests.cs" />
     <Compile Include="ActionFilterAttributes\RequestCorrelationAttributeTests.cs" />
     <Compile Include="HttpActionContextFactory.cs" />

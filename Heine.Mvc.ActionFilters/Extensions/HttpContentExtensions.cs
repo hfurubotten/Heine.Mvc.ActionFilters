@@ -15,7 +15,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
         {
             try
             {
-                if (httpContent == null) return string.Empty;
+                if (httpContent == null || httpContent is StreamContent || httpContent is ByteRangeStreamContent) return string.Empty;
 
                 var stream = httpContent.ReadAsStreamAsync().ConfigureAwait(false).GetAwaiter().GetResult();
                 stream.Position = 0;
@@ -60,9 +60,11 @@ namespace Heine.Mvc.ActionFilters.Extensions
                         {
                             return content;
                         }
-
-                    default:
+                    case "text/plain":
+                    case "text/html":
                         return content;
+                    default:
+                        return string.Empty;
                 }
             }
 
