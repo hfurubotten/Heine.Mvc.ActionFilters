@@ -13,7 +13,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
                 request.Version?.ToString(),
                 request.Content?.GetType().FullName,
                 HeaderUtilities.GetLoggableHeaders(request.Headers, request.Content?.Headers),
-                request.Content?.ReadAsString(request.Headers)
+                request.Content?.ReadAsString(request.Headers, false)
             );
         }
     }

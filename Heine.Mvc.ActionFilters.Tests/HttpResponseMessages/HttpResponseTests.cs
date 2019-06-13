@@ -27,7 +27,7 @@ namespace Heine.Mvc.ActionFilters.Tests.HttpResponseMessages
 
             // Act
             httpResponse.Destruct();
-            var checkVariable = httpResponse.Content.ReadAsString(mockHttpRequestMessage.Headers);
+            var checkVariable = httpResponse.Content.ReadAsString(mockHttpRequestMessage.Headers, true);
 
             // Assert
             Assert.AreEqual(string.Empty, checkVariable);
@@ -53,7 +53,7 @@ namespace Heine.Mvc.ActionFilters.Tests.HttpResponseMessages
 
             // Act
             response.Destruct();
-            var checkVariable = response.Content.ReadAsString(response.Headers);
+            var checkVariable = response.Content.ReadAsString(response.Headers, true);
 
             // Assert
             Assert.AreEqual(string.Empty, checkVariable);

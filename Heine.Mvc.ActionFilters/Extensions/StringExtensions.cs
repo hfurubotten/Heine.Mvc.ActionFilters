@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Heine.Mvc.ActionFilters.Extensions
 {
@@ -20,28 +21,33 @@ namespace Heine.Mvc.ActionFilters.Extensions
         }
 
         /// <summary>
-        ///     Convert the string to camel case.
+        ///     Convert the json path string to camel case.
         /// </summary>
         /// <param name="string"></param>
         /// <returns></returns>
-        public static string ToCamelCase(this string @string)
+        public static string JsonPathToCamelCase(this string @string)
         {
             // If there are 0 or 1 characters, just return the string.
             if (@string == null || @string.Length < 2)
                 return @string;
 
-            // Split the string into words.
-            var words = @string.Split(
-                new char[] { },
-                StringSplitOptions.RemoveEmptyEntries);
+            // Split the string on punctuation.
+            var words = @string.Split('.');
 
-            // Combine the words.
-            var result = words[0].FirstLetterToLower();
-            for (var i = 1; i < words.Length; i++)
+            if (words.Length == 1)
+                return words.First().FirstLetterToLower();
+
+            // Camel case the word and combine into one string.
+            var result = "";
+            for (var i = 0; i < words.Length; i++)
             {
-                result +=
-                    words[i].Substring(0, 1).ToUpper() +
-                    words[i].Substring(1);
+                // Skip punctuation if last word.
+                if (i == words.Length - 1)
+                {
+                    result += words[i].FirstLetterToLower();
+                    continue;
+                }
+                result += words[i].FirstLetterToLower() + ".";
             }
 
             return result;
@@ -52,7 +58,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
         /// </summary>
         /// <param name="source">The string to convert the casing on.</param>
         /// <returns>The new string with the changed casing.</returns>
-        public static string FirstLetterToLower(this string source)
+        private static string FirstLetterToLower(this string source)
         {
             if (source == null)
                 return null;
@@ -62,5 +68,7 @@ namespace Heine.Mvc.ActionFilters.Extensions
 
             return source.ToUpper();
         }
+
+
     }
 }

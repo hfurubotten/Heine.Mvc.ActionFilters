@@ -4,36 +4,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Reflection;
-using Heine.Mvc.ActionFilters.Extensions;
 
 namespace Heine.Mvc.ActionFilters.Services
 {
     public class ObfuscaterService : IObfuscaterService
     {
-        private readonly bool camelCase;
+        private readonly int expandDepth;
         private const string HeaderKeyXObfuscate = "X-Obfuscate";
 
-        public ObfuscaterService(bool camelCase, params Assembly[] assemblies)
+        public ObfuscaterService(int expandDepth, params Assembly[] assemblies)
         {
-            this.camelCase = camelCase;
+            this.expandDepth = expandDepth;
             TypeObfuscationGraphs = Initialize(assemblies);
         }
 
-        //TODO: Refactor this to be recursive and prettier :) But it works for now as a PoC! :D
-        public IDictionary<Type, IList<string>> Initialize(params Assembly[] assemblies)
+        private IDictionary<Type, IList<string>> Initialize(params Assembly[] assemblies)
         {
-            string FormatPropertyName(string propertyName)
-            {
-                return camelCase 
-                    ? propertyName.ToCamelCase()
-                    : propertyName;
-            }
-
             string BuildPropertyName(PropertyInfo propertyInfo)
             {
-                return typeof(IEnumerable).IsAssignableFrom(propertyInfo.PropertyType)
-                    ? $"{FormatPropertyName(propertyInfo.Name)}[*]" //Array
-                    : FormatPropertyName(propertyInfo.Name); // Object or scalar value
+                var propertyType = propertyInfo.PropertyType;
+
+                if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(ICollection<>))
+                    return $"{propertyInfo.Name}[*]";
+
+                return typeof(ICollection).IsAssignableFrom(propertyType)
+                    ? $"{propertyInfo.Name}[*]" // Collection
+                    : propertyInfo.Name; // Object or scalar value
             }
 
             Type GetCorrectType(Type type)
@@ -41,10 +37,84 @@ namespace Heine.Mvc.ActionFilters.Services
                 if (type.IsArray)
                     return type.GetElementType();
 
-                if (typeof(IEnumerable<>).IsAssignableFrom(type))
-                    return type.GetGenericTypeDefinition();
+                if (type.IsGenericType && type.GetInterfaces().Contains(typeof(IEnumerable)))
+                    return type.GetGenericArguments().Last();
 
                 return type;
+            }
+
+            void AddObfuscateProperties(Type type, ref List<string> properties, List<PropertyInfo> prevPropList,
+                int depth)
+            {
+                if (depth == 0)
+                    return;
+
+                // Check if type is already present in list of previous properties.
+                // If so it should not be traversed.
+                if (prevPropList != null)
+                {
+                    var typeName = type.FullName;
+                    // Support a class referencing itself,
+                    // but check for reference loop in other cases.
+                    if (!(prevPropList.Count == 1 && typeName == prevPropList.First().DeclaringType?.FullName))
+                    {
+                        foreach (var prop in prevPropList)
+                        {
+                            if (prop.DeclaringType?.FullName == typeName)
+                            {
+                                return;
+                            }
+                        }
+                    }
+                }
+
+                foreach (var propertyInfo in type.GetProperties())
+                {
+                    // Empty all previous properties because method is at root.
+                    if (depth == expandDepth)
+                    {
+                        prevPropList = new List<PropertyInfo>();
+                    }
+
+                    // When circling back after a recursive call there will be element/s in list
+                    // which should not be present at current depth.
+                    // Therefore need to remove all the last elements in list which whould not be at current depth.
+                    if (prevPropList.Count > expandDepth - depth)
+                    {
+                        var numberOfRecordsToDelete = prevPropList.Count - (expandDepth - depth);
+                        for (var i = 0; i < numberOfRecordsToDelete; i++)
+                        {
+                            prevPropList.RemoveAt(prevPropList.Count - 1);
+                        }
+                    }
+
+                    if (Attribute.IsDefined(propertyInfo, typeof(ObfuscationAttribute)))
+                    {
+                        if (!prevPropList.Any())
+                        {
+                            properties.Add(BuildPropertyName(propertyInfo));
+                        }
+                        else
+                        {
+                            var jPath = string.Empty;
+
+                            foreach (var prop in prevPropList)
+                            {
+                                jPath += $"{BuildPropertyName(prop)}.";
+                            }
+
+                            properties.Add($"{jPath}{BuildPropertyName(propertyInfo)}");
+                        }
+                    }
+                    else if (propertyInfo.PropertyType.IsClass || propertyInfo.PropertyType.IsInterface)
+                    {
+                        if (depth - 1 <= 0) continue;
+                        var propertyType = GetCorrectType(propertyInfo.PropertyType);
+
+                        prevPropList.Add(propertyInfo);
+                        AddObfuscateProperties(propertyType, ref properties, prevPropList, depth - 1);
+                    }
+                }
             }
 
             var typeObfuscationGraphs = new Dictionary<Type, IList<string>>();
@@ -53,51 +123,25 @@ namespace Heine.Mvc.ActionFilters.Services
                 foreach (var type in assembly.GetTypes())
                 {
                     var properties = new List<string>();
+                    // Obfuscation attribute on class level.
                     if (Attribute.IsDefined(type, typeof(ObfuscationAttribute)))
                     {
                         foreach (var propertyInfo in type.GetProperties())
                         {
-                            properties.Add(FormatPropertyName(propertyInfo.Name));
+                            properties.Add(BuildPropertyName(propertyInfo));
                         }
                     }
+                    // Obfuscation attribute on property level.
                     else
                     {
-                        foreach (var propertyInfo1 in type.GetProperties())
-                        {
-                            if (Attribute.IsDefined(propertyInfo1, typeof(ObfuscationAttribute)))
-                            {
-                                properties.Add(FormatPropertyName(propertyInfo1.Name));
-                            }
-                            else if (propertyInfo1.PropertyType.IsClass)
-                            {
-                                var propertyType1 = GetCorrectType(propertyInfo1.PropertyType);
-
-                                foreach (var propertyInfo2 in propertyType1.GetProperties())
-                                {
-                                    if (Attribute.IsDefined(propertyInfo2, typeof(ObfuscationAttribute)))
-                                    {
-                                        properties.Add($"{BuildPropertyName(propertyInfo1)}.{FormatPropertyName(propertyInfo2.Name)}");
-                                    }
-                                    else if (propertyInfo2.PropertyType.IsClass)
-                                    {
-                                        var propertyType2 = GetCorrectType(propertyInfo2.PropertyType);
-
-                                        foreach (var propertyInfo3 in propertyType2.GetProperties())
-                                        {
-                                            if (Attribute.IsDefined(propertyInfo3, typeof(ObfuscationAttribute)))
-                                            {
-                                                properties.Add($"{BuildPropertyName(propertyInfo1)}.{BuildPropertyName(propertyInfo2)}.{FormatPropertyName(propertyInfo3.Name)}");
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        AddObfuscateProperties(type, ref properties, null, expandDepth);
                     }
+
                     if (properties.Any())
                         typeObfuscationGraphs.Add(type, properties);
                 }
             }
+
             return typeObfuscationGraphs;
         }
 
@@ -112,8 +156,9 @@ namespace Heine.Mvc.ActionFilters.Services
                 if (httpHeaders.TryGetValues(HeaderKeyXObfuscate, out var values))
                 {
                     if (!httpHeaders.Remove(HeaderKeyXObfuscate)) return;
-                    
-                    httpHeaders.TryAddWithoutValidation(HeaderKeyXObfuscate, values.Concat(TypeObfuscationGraphs[type]).Distinct());
+
+                    httpHeaders.TryAddWithoutValidation(HeaderKeyXObfuscate,
+                        values.Concat(TypeObfuscationGraphs[type]).Distinct());
                 }
                 else
                 {

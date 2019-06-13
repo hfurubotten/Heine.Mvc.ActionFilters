@@ -98,7 +98,13 @@
     <Compile Include="ActionFilterAttributes\AuditRequestAttributeTests.cs" />
     <Compile Include="ActionFilterAttributes\ResponseCorrelationAttributeTests.cs" />
     <Compile Include="Extensions\HeaderUtilities.cs" />
+    <Compile Include="Extensions\HttpContentExtensionsTests.cs" />
     <Compile Include="Extensions\StringExtensionsTests.cs" />
+    <Compile Include="Services\Models\CreditDetail.cs" />
+    <Compile Include="Services\Models\Document.cs" />
+    <Compile Include="Services\Models\Person.cs" />
+    <Compile Include="Services\Models\Remark.cs" />
+    <Compile Include="Services\ObfuscatorServiceTests.cs" />
     <Compile Include="HttpRequestMessages\HttpRequestTests.cs" />
     <Compile Include="HttpResponseMessages\HttpResponseTests.cs" />
     <Compile Include="ValidationAttributes\GuidNotEmptyAttributeTests.cs" />
@@ -121,6 +127,7 @@
       <Name>Heine.Mvc.ActionFilters</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
