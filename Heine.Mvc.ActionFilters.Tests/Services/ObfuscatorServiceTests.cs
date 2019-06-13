@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using FluentAssertions;
 using Heine.Mvc.ActionFilters.Services;
 using Heine.Mvc.ActionFilters.Tests.Services.Models;
